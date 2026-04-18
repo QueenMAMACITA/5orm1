@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Incoming Call</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+/* call screen */
+.screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+    text-align: center;
+}
+
+/* caller */
+.name {
+    font-size: 28px;
+    margin-top: 40px;
+}
+
+.status {
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+/* avatar circle */
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #222;
+    margin-top: 30px;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* buttons */
+.buttons {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.accept {
+    background: green;
+}
+
+.decline {
+    background: red;
+}
+</style>
+</head>
+
+<body>
+
+<div class="screen">
+    <div>
+        <div class="name" id="caller">Unknown Caller</div>
+        <div class="status" id="status">Incoming call...</div>
+    </div>
+
+    <div class="avatar"></div>
+
+    <div class="buttons">
+        <div class="btn decline" onclick="decline()">✖</div>
+        <div class="btn accept" onclick="accept()">✔</div>
+    </div>
+</div>
+
+<script>
+let callerNames = ["Mom 📱", "Unknown Number", "Best Friend 😂", "System Alert", "Private Caller"];
+
+let status = document.getElementById("status");
+let caller = document.getElementById("caller");
+
+// random caller
+caller.innerText = callerNames[Math.floor(Math.random() * callerNames.length)];
+
+function accept() {
+    status.innerText = "Connecting...";
+    
+    setTimeout(() => {
+        alert("📞 Call connected... (just a prank 😄)");
+        status.innerText = "Call ended";
+    }, 2000);
+}
+
+function decline() {
+    status.innerText = "Call declined";
+}
+
+// fake ringing vibration effect (visual only)
+setInterval(() => {
+    document.body.style.background = 
+        document.body.style.background === "black" ? "#111" : "black";
+}, 800);
+</script>
+
+</body>
+</html>
