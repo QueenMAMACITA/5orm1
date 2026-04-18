@@ -2,309 +2,162 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>🤡 Clown Catcher DELUXE</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --purple:#6c2bd9;--purple2:#9d4edd;--yellow:#ffd60a;--orange:#ff6b35;
-  --red:#ff3860;--green:#2dc653;--blue:#3a86ff;--pink:#ff6eb4;
-  --dark:#0d0a1a;--dark2:#1a1030;--dark3:#251848;
-  --white:#fff;--gray:#a0a0c0;
+  --purple:#6c2bd9; --purple2:#9d4edd; --yellow:#ffd60a; --orange:#ff6b35;
+  --red:#ff3860; --green:#2dc653; --blue:#3a86ff; --pink:#ff6eb4;
+  --dark:#0d0a1a; --dark2:#1a1030; --dark3:#251848;
+  --white:#fff; --gray:#a0a0c0;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--dark)}
-body{font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--dark); touch-action: manipulation;}
+body{font-family:'Nunito',sans-serif;}
 
-/* ───── CANVAS BG ───── */
+/* Canvas BG */
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ───── SCREENS ───── */
-.screen{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center}
+/* Screens */
+.screen{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center; padding:16px;}
 .screen.active{display:flex}
 
-/* ───── MENU ───── */
-#menuScreen{background:transparent}
+/* Menu Card */
 .menu-card{
   background:linear-gradient(145deg,#1e1040,#2a1860);
   border:2px solid #4a2a8a;border-radius:32px;
-  padding:40px 50px;text-align:center;
+  padding:24px 28px;text-align:center;
   box-shadow:0 0 60px #6c2bd940,0 0 120px #6c2bd920;
-  min-width:380px;max-width:440px;
+  width:90%; max-width:440px; margin:auto;
 }
-.game-logo{font-size:80px;line-height:1;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+.game-logo{font-size:70px;line-height:1;margin-bottom:8px;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.game-title{font-family:'Fredoka One',cursive;font-size:48px;color:var(--yellow);
-  text-shadow:0 4px 0 #a07800,0 0 30px #ffd60a80;letter-spacing:2px;line-height:1}
-.game-tagline{color:var(--gray);font-size:15px;margin:8px 0 24px;font-weight:700}
+.game-title{font-family:'Fredoka One',cursive;font-size:40px;color:var(--yellow);text-shadow:0 4px 0 #a07800;letter-spacing:2px;}
+.game-tagline{color:var(--gray);font-size:14px;margin:8px 0 20px;font-weight:700}
 
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.mode-btn{
-  padding:14px 10px;border-radius:16px;border:2px solid transparent;
-  font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
-  transition:transform 0.15s,box-shadow 0.15s;text-align:center;
-  background:#2a1860;color:#fff;
-}
-.mode-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px #0008}
-.mode-btn:active{transform:scale(0.95)}
+.mode-btn{padding:12px 8px;border-radius:16px;border:2px solid transparent;font-family:'Fredoka One',cursive;font-size:16px;cursor:pointer;background:#2a1860;color:#fff;transition:0.1s}
+.mode-btn:active{transform:scale(0.96)}
 .mode-btn.classic{border-color:var(--blue);color:var(--blue)}
 .mode-btn.survival{border-color:var(--red);color:var(--red)}
 .mode-btn.zen{border-color:var(--green);color:var(--green)}
 .mode-btn.boss{border-color:var(--yellow);color:var(--yellow)}
-.mode-icon{font-size:28px;display:block;margin-bottom:4px}
-.mode-sub{font-size:11px;font-family:'Nunito',sans-serif;font-weight:700;opacity:0.7}
+.mode-icon{font-size:24px;display:block}
+.mode-sub{font-size:10px;opacity:0.7}
 
-.diff-row{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
-.diff-pill{
-  padding:7px 18px;border-radius:50px;border:2px solid #3a2a6a;
-  font-size:14px;font-weight:900;cursor:pointer;background:#1a1040;color:var(--gray);
-  transition:all 0.15s;
-}
+.diff-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.diff-pill{padding:6px 14px;border-radius:50px;border:2px solid #3a2a6a;font-size:13px;font-weight:900;cursor:pointer;background:#1a1040;color:var(--gray)}
 .diff-pill.sel{background:var(--purple);border-color:var(--purple2);color:#fff}
-.diff-pill:hover{border-color:var(--purple2)}
 
-.big-play-btn{
-  width:100%;padding:18px;border-radius:20px;border:none;
-  font-family:'Fredoka One',cursive;font-size:26px;cursor:pointer;
-  background:linear-gradient(135deg,var(--orange),var(--red));
-  color:#fff;letter-spacing:1px;
-  box-shadow:0 6px 0 #aa2020,0 0 30px #ff3860aa;
-  transition:transform 0.1s,box-shadow 0.1s;
-  margin-bottom:14px;
-}
-.big-play-btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #aa2020,0 0 40px #ff3860cc}
+.big-play-btn{width:100%;padding:16px;border-radius:20px;border:none;font-family:'Fredoka One',cursive;font-size:24px;cursor:pointer;background:linear-gradient(135deg,var(--orange),var(--red));color:#fff;box-shadow:0 6px 0 #aa2020;margin-bottom:14px}
 .big-play-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #aa2020}
+.score-bar{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--gray)}
 
-.score-bar{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--gray)}
-.score-bar span{color:var(--yellow)}
-
-/* ───── HUD ───── */
-#hud{
-  position:fixed;top:0;left:0;right:0;z-index:30;
-  display:none;
-  padding:10px 20px;
-  background:linear-gradient(to bottom,#0d0a1aee,transparent);
-  align-items:center;justify-content:space-between;
-  pointer-events:none;
-}
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;z-index:30;display:none;padding:8px 16px;background:linear-gradient(to bottom,#0d0a1aee,transparent);align-items:center;justify-content:space-between;pointer-events:none}
 #hud.show{display:flex}
 .hud-block{display:flex;flex-direction:column;align-items:center}
-.hud-val{font-family:'Fredoka One',cursive;font-size:28px;color:#fff;line-height:1}
-.hud-lbl{font-size:10px;font-weight:900;color:var(--gray);letter-spacing:2px}
-.hud-center{display:flex;flex-direction:column;align-items:center;gap:2px}
-.wave-badge{
-  background:var(--purple);border-radius:20px;padding:3px 14px;
-  font-family:'Fredoka One',cursive;font-size:16px;color:#fff;
-}
-.combo-badge{
-  background:linear-gradient(90deg,var(--orange),var(--red));
-  border-radius:20px;padding:2px 12px;
-  font-family:'Fredoka One',cursive;font-size:13px;color:#fff;
-  opacity:0;transition:opacity 0.2s;
-}
+.hud-val{font-family:'Fredoka One',cursive;font-size:26px;color:#fff}
+.hud-lbl{font-size:9px;font-weight:900;color:var(--gray)}
+.wave-badge{background:var(--purple);border-radius:20px;padding:3px 12px;font-family:'Fredoka One',cursive;font-size:14px;color:#fff}
+.combo-badge{background:linear-gradient(90deg,var(--orange),var(--red));border-radius:20px;padding:2px 10px;font-size:12px;opacity:0}
 .combo-badge.show{opacity:1}
-.lives-row{display:flex;gap:3px;font-size:20px}
+.lives-row{display:flex;gap:3px;font-size:18px}
 
-/* ───── POWER / PROGRESS BARS ───── */
-#bottomHud{
-  position:fixed;bottom:0;left:0;right:0;z-index:30;
-  display:none;padding:12px 20px 16px;
-  background:linear-gradient(to top,#0d0a1aee,transparent);
-  align-items:flex-end;justify-content:space-between;
-  pointer-events:none;
-}
+#bottomHud{position:fixed;bottom:0;left:0;right:0;z-index:30;display:none;padding:8px 12px 12px;background:linear-gradient(to top,#0d0a1aee,transparent);align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;pointer-events:none}
 #bottomHud.show{display:flex}
-.bar-group{display:flex;flex-direction:column;gap:4px;min-width:160px}
-.bar-lbl{font-size:11px;font-weight:900;color:var(--gray);letter-spacing:1px}
-.bar-track{height:10px;background:#ffffff18;border-radius:5px;overflow:hidden;border:1px solid #ffffff22}
-.bar-fill{height:100%;border-radius:5px;transition:width 0.15s}
+.bar-group{min-width:120px;flex:1}
+.bar-lbl{font-size:9px;font-weight:900;color:var(--gray)}
+.bar-track{height:8px;background:#ffffff18;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;transition:width 0.1s}
 .power-fill{background:linear-gradient(90deg,var(--purple),var(--purple2))}
 .xp-fill{background:linear-gradient(90deg,var(--blue),var(--green))}
-#frenzyBtn{
-  pointer-events:auto;
-  background:linear-gradient(135deg,var(--yellow),var(--orange));
-  border:none;border-radius:16px;padding:10px 20px;
-  font-family:'Fredoka One',cursive;font-size:18px;color:#1a0a00;
-  cursor:pointer;opacity:0.4;transition:opacity 0.2s,transform 0.1s;
-  box-shadow:0 4px 0 #a05000;
-}
+#frenzyBtn{pointer-events:auto;background:linear-gradient(135deg,var(--yellow),var(--orange));border:none;border-radius:40px;padding:6px 12px;font-family:'Fredoka One',cursive;font-size:16px;cursor:pointer;opacity:0.4;transition:0.1s}
 #frenzyBtn.ready{opacity:1;animation:pulse 0.7s infinite alternate}
-#frenzyBtn:active{transform:scale(0.94)}
-@keyframes pulse{from{box-shadow:0 4px 0 #a05000}to{box-shadow:0 4px 20px #ffd60a,0 4px 0 #a05000}}
 .pu-active{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
-.pu-pill{
-  background:#ffffff18;border-radius:20px;padding:4px 10px;
-  font-size:12px;font-weight:900;color:#fff;
-  display:flex;align-items:center;gap:5px;
-}
-.pu-timer{font-size:10px;color:var(--yellow)}
+.pu-pill{background:#ffffff18;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:900;color:#fff;white-space:nowrap}
 
-/* ───── ARENA ───── */
-#arena{position:fixed;inset:0;z-index:20;overflow:hidden;cursor:crosshair;display:none}
+/* Arena */
+#arena{position:fixed;inset:0;z-index:20;overflow:hidden;cursor:crosshair;display:none;touch-action:manipulation}
 #arena.show{display:block}
 
-/* ───── CLOWNS ───── */
-.clown{
-  position:absolute;cursor:pointer;text-align:center;
-  transition:transform 0.08s;
-  animation:bounceIn 0.25s cubic-bezier(.36,.07,.19,.97) both;
-}
-@keyframes bounceIn{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
-.clown:hover{transform:scale(1.15) rotate(-5deg)!important}
-.clown:active{transform:scale(0.8)!important}
-.c-emoji{font-size:48px;line-height:1;display:block;filter:drop-shadow(0 4px 6px #0008)}
-.c-hp-wrap{width:44px;height:6px;background:#ffffff22;border-radius:3px;margin:4px auto 0}
-.c-hp{height:100%;border-radius:3px;background:linear-gradient(90deg,#ff3860,#ff6b35);transition:width 0.1s}
-.c-timer-ring{
-  position:absolute;top:-4px;right:-4px;
-  width:16px;height:16px;border-radius:50%;
-  font-size:10px;font-weight:900;color:#fff;
-  background:var(--red);display:flex;align-items:center;justify-content:center;
-}
+/* Clowns */
+.clown{position:absolute;cursor:pointer;text-align:center;transition:transform 0.08s;animation:bounceIn 0.2s cubic-bezier(.36,.07,.19,.97) both;touch-action:manipulation}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+.clown:active{transform:scale(0.85)!important}
+.c-emoji{font-size:42px;line-height:1;filter:drop-shadow(0 4px 6px #0008)}
+.c-hp-wrap{width:42px;height:5px;background:#ffffff22;border-radius:3px;margin:4px auto 0}
+.c-hp{height:100%;border-radius:3px;background:linear-gradient(90deg,#ff3860,#ff6b35)}
 .clown.bomb .c-emoji{filter:drop-shadow(0 4px 6px #ff000080)}
 .clown.golden .c-emoji{filter:drop-shadow(0 0 12px #ffd60a)}
-.clown.frozen{filter:hue-rotate(160deg) brightness(0.8);animation:shake 0.2s infinite!important}
-@keyframes shake{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.clown.frozen{filter:hue-rotate(160deg) brightness(0.8)}
 
-/* ───── BOSS ───── */
-.boss-wrap{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);
-  text-align:center;z-index:22;
-}
-.boss-emoji{font-size:120px;line-height:1;display:block;animation:bossBob 1s ease-in-out infinite}
-@keyframes bossBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
-.boss-hp-wrap{width:300px;height:14px;background:#ffffff22;border-radius:7px;margin:12px auto 0;border:2px solid #ffffff22}
-.boss-hp{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--orange));transition:width 0.2s}
-.boss-name{font-family:'Fredoka One',cursive;font-size:22px;color:var(--red);margin-bottom:6px}
+/* Boss */
+.boss-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);text-align:center;z-index:22;width:90%;max-width:360px}
+.boss-emoji{font-size:90px;animation:bossBob 1s ease-in-out infinite}
+@keyframes bossBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.boss-hp-wrap{height:12px;background:#ffffff22;border-radius:7px;margin:8px auto 0}
+.boss-hp{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--orange))}
+.boss-name{font-family:'Fredoka One',cursive;font-size:20px;color:var(--red)}
 
-/* ───── PARTICLES ───── */
+/* Particles & Toasts */
 .particle{position:absolute;pointer-events:none;z-index:50;animation:poof 0.7s forwards}
-@keyframes poof{0%{transform:scale(0.5) translateY(0);opacity:1}100%{transform:scale(2) translateY(-80px);opacity:0}}
+@keyframes poof{0%{transform:scale(0.5);opacity:1}100%{transform:scale(2) translateY(-80px);opacity:0}}
 .score-pop{position:absolute;pointer-events:none;z-index:50;font-family:'Fredoka One',cursive;font-size:20px;animation:scoreFloat 0.9s forwards}
-@keyframes scoreFloat{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-90px) scale(1.3);opacity:0}}
-.miss-pop{position:absolute;pointer-events:none;z-index:50;font-family:'Fredoka One',cursive;font-size:15px;color:#ff6b35;animation:scoreFloat 0.8s forwards}
+@keyframes scoreFloat{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-70px);opacity:0}}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:60;background:var(--yellow);color:#1a0a00;border-radius:30px;padding:8px 24px;font-family:'Fredoka One',cursive;font-size:18px;display:none;white-space:nowrap;box-shadow:0 4px 20px #ffd60a80}
 
-/* ───── TOAST ───── */
-#toast{
-  position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:60;
-  background:var(--yellow);color:#1a0a00;border-radius:30px;
-  padding:10px 28px;font-family:'Fredoka One',cursive;font-size:20px;
-  display:none;white-space:nowrap;
-  box-shadow:0 4px 20px #ffd60a80;
-}
-
-/* ───── PAUSE ───── */
-#pauseOverlay{
-  position:fixed;inset:0;z-index:80;
-  background:#0009;display:none;
-  flex-direction:column;align-items:center;justify-content:center;gap:16px;
-}
+/* Pause & Game Over */
+#pauseOverlay{position:fixed;inset:0;z-index:80;background:#0009;display:none;align-items:center;justify-content:center}
 #pauseOverlay.show{display:flex}
-.pause-card{
-  background:linear-gradient(145deg,#1e1040,#2a1860);
-  border:2px solid #4a2a8a;border-radius:28px;padding:36px 50px;
-  text-align:center;
-}
-.pause-title{font-family:'Fredoka One',cursive;font-size:40px;color:var(--yellow);margin-bottom:20px}
-.pause-btn{
-  display:block;width:220px;padding:14px;border-radius:16px;border:none;
-  font-family:'Fredoka One',cursive;font-size:20px;cursor:pointer;
-  margin-bottom:10px;transition:transform 0.1s;
-}
-.pause-btn:hover{transform:scale(1.05)}
-.pause-btn:active{transform:scale(0.95)}
-.pb-resume{background:var(--green);color:#fff;box-shadow:0 4px 0 #1a8a3a}
+.pause-card{background:linear-gradient(145deg,#1e1040,#2a1860);border-radius:28px;padding:24px 32px;text-align:center;width:80%;max-width:300px}
+.pause-title{font-family:'Fredoka One',cursive;font-size:32px;color:var(--yellow)}
+.pause-btn{width:100%;padding:12px;border-radius:16px;margin-bottom:10px;font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer}
+.pb-resume{background:var(--green);color:#fff}
 .pb-quit{background:#3a2a6a;color:var(--gray)}
 
-/* ───── GAME OVER ───── */
 #overScreen{background:linear-gradient(135deg,#0d0a1a,#1a0a30)}
-.over-card{
-  background:linear-gradient(145deg,#1e1040,#2a1860);
-  border:2px solid #4a2a8a;border-radius:32px;padding:36px 44px;
-  text-align:center;max-width:400px;width:90%;
-  box-shadow:0 0 60px #6c2bd940;
-}
-.over-medal{font-size:80px;margin-bottom:4px;animation:float 2s ease-in-out infinite}
-.over-title{font-family:'Fredoka One',cursive;font-size:42px;color:var(--red);text-shadow:0 3px 0 #880020}
-.over-msg{color:var(--gray);font-size:15px;margin:6px 0 20px;font-weight:700}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.stat-cell{background:#ffffff08;border-radius:14px;padding:10px 6px}
-.stat-num{font-family:'Fredoka One',cursive;font-size:28px;color:#fff}
-.stat-lbl{font-size:10px;font-weight:900;color:var(--gray);letter-spacing:1px}
-.new-best{color:var(--yellow);font-size:13px;font-weight:900;margin-bottom:12px}
-.over-btns{display:flex;gap:10px;justify-content:center}
-.ob{
-  padding:14px 26px;border-radius:16px;border:none;
-  font-family:'Fredoka One',cursive;font-size:20px;cursor:pointer;
-  transition:transform 0.1s;
-}
-.ob:hover{transform:scale(1.05)}
-.ob:active{transform:scale(0.95)}
-.ob-retry{background:linear-gradient(135deg,var(--orange),var(--red));color:#fff;box-shadow:0 4px 0 #880020}
-.ob-menu{background:#2a1860;color:var(--gray);border:2px solid #4a2a8a}
+.over-card{background:linear-gradient(145deg,#1e1040,#2a1860);border-radius:32px;padding:24px 20px;width:90%;max-width:380px}
+.over-medal{font-size:70px}
+.over-title{font-family:'Fredoka One',cursive;font-size:38px;color:var(--red)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.stat-cell{background:#ffffff08;border-radius:14px;padding:8px}
+.stat-num{font-family:'Fredoka One',cursive;font-size:24px;color:#fff}
+.stat-lbl{font-size:9px;font-weight:900;color:var(--gray)}
+.ob{padding:12px 20px;border-radius:16px;font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer}
+.ob-retry{background:linear-gradient(135deg,var(--orange),var(--red));color:#fff}
+.ob-menu{background:#2a1860;color:var(--gray)}
 
-/* ───── ACHIEVEMENTS ───── */
-#achieveToast{
-  position:fixed;bottom:80px;right:16px;z-index:70;
-  background:linear-gradient(135deg,#2a1860,#1e1040);
-  border:2px solid var(--yellow);border-radius:20px;
-  padding:12px 18px;display:none;
-  flex-direction:column;gap:2px;max-width:220px;
-}
-.ach-title{font-family:'Fredoka One',cursive;font-size:14px;color:var(--yellow)}
-.ach-name{font-size:13px;font-weight:700;color:#fff}
-.ach-desc{font-size:11px;color:var(--gray)}
-
-/* ───── PAUSE BUTTON ───── */
-#pauseBtn{
-  position:fixed;top:12px;right:16px;z-index:40;
-  background:#ffffff18;border:none;border-radius:12px;
-  padding:8px 14px;font-size:20px;cursor:pointer;
-  color:#fff;display:none;transition:background 0.15s;
-}
-#pauseBtn.show{display:block}
-#pauseBtn:hover{background:#ffffff30}
-
-/* ───── ZEN TIMER ───── */
-#zenTimer{
-  position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:31;
-  font-family:'Fredoka One',cursive;font-size:48px;color:var(--green);
-  display:none;text-shadow:0 0 20px #2dc65380;
-}
-
-/* ───── COUNTDOWN ───── */
-#countdown{
-  position:fixed;inset:0;z-index:90;
-  background:#0009;display:none;
-  align-items:center;justify-content:center;
-}
+#zenTimer{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:31;font-family:'Fredoka One',cursive;font-size:44px;color:var(--green);display:none;text-shadow:0 0 20px #2dc65380}
+#countdown{position:fixed;inset:0;z-index:90;background:#0009;display:none;align-items:center;justify-content:center}
 #countdown.show{display:flex}
-.cd-num{font-family:'Fredoka One',cursive;font-size:160px;color:var(--yellow);
-  text-shadow:0 0 40px var(--yellow);animation:cdPop 0.5s ease-out}
-@keyframes cdPop{from{transform:scale(2);opacity:0}to{transform:scale(1);opacity:1}}
+.cd-num{font-family:'Fredoka One',cursive;font-size:140px;color:var(--yellow);animation:cdPop 0.5s ease-out}
+#pauseBtn{position:fixed;top:8px;right:12px;z-index:40;background:#ffffff18;border:none;border-radius:12px;padding:6px 12px;font-size:20px;cursor:pointer;color:#fff;display:none}
+#pauseBtn.show{display:block}
+#achieveToast{position:fixed;bottom:70px;right:10px;z-index:70;background:linear-gradient(135deg,#2a1860,#1e1040);border:2px solid var(--yellow);border-radius:20px;padding:10px 14px;display:none;flex-direction:column;max-width:200px}
+#achOverlay .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:60vh;overflow-y:auto}
 
-/* ───── ACHIEVEMENTS OVERLAY ───── */
-#achOverlay{
-  position:fixed;inset:0;z-index:85;background:#0009;
-  display:none;align-items:center;justify-content:center;
+/* Responsive */
+@media (max-width: 600px) {
+  .menu-card{padding:18px 16px}
+  .game-title{font-size:32px}
+  .mode-btn{font-size:13px;padding:8px 4px}
+  .mode-icon{font-size:20px}
+  .diff-pill{padding:4px 12px;font-size:11px}
+  .big-play-btn{font-size:20px;padding:12px}
+  .hud-val{font-size:20px}
+  .wave-badge{font-size:11px}
+  .c-emoji{font-size:36px}
+  .boss-emoji{font-size:70px}
+  .boss-name{font-size:16px}
+  #bottomHud{gap:6px}
+  .bar-group{min-width:90px}
+  #frenzyBtn{font-size:12px;padding:4px 10px}
+  .pu-pill{font-size:9px}
+  .cd-num{font-size:100px}
+  #zenTimer{font-size:36px;top:60px}
 }
-#achOverlay.show{display:flex}
-.ach-card{
-  background:linear-gradient(145deg,#1e1040,#2a1860);
-  border:2px solid var(--yellow);border-radius:28px;
-  padding:30px 40px;max-width:380px;width:90%;
-}
-.ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
-.ach-item{
-  background:#ffffff08;border-radius:14px;padding:10px;
-  display:flex;align-items:center;gap:8px;
-}
-.ach-item.unlocked{border:1px solid var(--yellow)}
-.ach-item-icon{font-size:28px}
-.ach-item-info{flex:1}
-.ach-item-name{font-size:13px;font-weight:900;color:#fff}
-.ach-item-desc{font-size:11px;color:var(--gray)}
-.ach-item.locked{opacity:0.35;filter:grayscale(1)}
 </style>
 </head>
 <body>
@@ -316,815 +169,141 @@ body{font-family:'Nunito',sans-serif}
   <div class="menu-card">
     <div class="game-logo">🤡</div>
     <div class="game-title">CLOWN CATCHER</div>
-    <div style="font-family:'Fredoka One',cursive;font-size:18px;color:var(--orange);margin-bottom:4px">DELUXE</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--orange)">DELUXE</div>
     <div class="game-tagline">Tap fast. Dodge bombs. Catch 'em all!</div>
-
-    <div style="font-size:12px;font-weight:900;color:var(--gray);letter-spacing:2px;margin-bottom:10px">GAME MODE</div>
     <div class="mode-grid">
-      <button class="mode-btn classic sel-mode" data-mode="classic" onclick="selectMode(this)">
-        <span class="mode-icon">🎮</span>Classic<span class="mode-sub">Waves & Bosses</span>
-      </button>
-      <button class="mode-btn survival" data-mode="survival" onclick="selectMode(this)">
-        <span class="mode-icon">⚡</span>Survival<span class="mode-sub">Last as long as you can</span>
-      </button>
-      <button class="mode-btn zen" data-mode="zen" onclick="selectMode(this)">
-        <span class="mode-icon">🌈</span>Zen<span class="mode-sub">60s no-bomb chill</span>
-      </button>
-      <button class="mode-btn boss" data-mode="boss" onclick="selectMode(this)">
-        <span class="mode-icon">👹</span>Boss Rush<span class="mode-sub">Pure boss fights</span>
-      </button>
+      <button class="mode-btn classic sel-mode" data-mode="classic"><span class="mode-icon">🎮</span>Classic<span class="mode-sub">Waves & Bosses</span></button>
+      <button class="mode-btn survival" data-mode="survival"><span class="mode-icon">⚡</span>Survival<span class="mode-sub">Endless + drain</span></button>
+      <button class="mode-btn zen" data-mode="zen"><span class="mode-icon">🌈</span>Zen<span class="mode-sub">60s no bomb</span></button>
+      <button class="mode-btn boss" data-mode="boss"><span class="mode-icon">👹</span>Boss Rush<span class="mode-sub">Pure bosses</span></button>
     </div>
-
-    <div style="font-size:12px;font-weight:900;color:var(--gray);letter-spacing:2px;margin-bottom:8px">DIFFICULTY</div>
     <div class="diff-row">
-      <button class="diff-pill sel" data-d="easy" onclick="selectDiff(this)">😊 Easy</button>
-      <button class="diff-pill" data-d="medium" onclick="selectDiff(this)">😤 Medium</button>
-      <button class="diff-pill" data-d="hard" onclick="selectDiff(this)">💀 Hard</button>
-      <button class="diff-pill" data-d="insane" onclick="selectDiff(this)">🔥 Insane</button>
+      <button class="diff-pill sel" data-d="easy">😊 Easy</button>
+      <button class="diff-pill" data-d="medium">😤 Medium</button>
+      <button class="diff-pill" data-d="hard">💀 Hard</button>
+      <button class="diff-pill" data-d="insane">🔥 Insane</button>
     </div>
-
     <button class="big-play-btn" onclick="startGame()">🎪 PLAY!</button>
-    <div class="score-bar">
-      <span>Best: <span id="bestDisp">0</span></span>
-      <button onclick="showAchievements()" style="background:none;border:none;color:var(--gray);font-size:13px;font-weight:900;cursor:pointer">🏆 Achievements</button>
-      <span>Caught: <span id="totalDisp">0</span></span>
-    </div>
+    <div class="score-bar"><span>🏆 Best: <span id="bestDisp">0</span></span><button onclick="showAchievements()" style="background:none;border:none;color:var(--gray);font-weight:900;cursor:pointer">🏆 Achievements</button><span>🤡 Total: <span id="totalDisp">0</span></span></div>
   </div>
 </div>
 
-<!-- COUNTDOWN -->
-<div id="countdown"></div>
-
-<!-- HUD -->
-<div id="hud">
-  <div class="hud-block">
-    <div class="hud-val" id="hScore">0</div>
-    <div class="hud-lbl">SCORE</div>
-  </div>
-  <div class="hud-center">
-    <div class="wave-badge" id="waveBadge">WAVE 1</div>
-    <div class="combo-badge" id="comboBadge">x2 COMBO!</div>
-  </div>
-  <div class="hud-block" style="align-items:flex-end">
-    <div class="lives-row" id="livesRow">❤️❤️❤️</div>
-    <div class="hud-lbl">LIVES</div>
-  </div>
-</div>
-
+<!-- HUDs -->
+<div id="hud"><div class="hud-block"><div class="hud-val" id="hScore">0</div><div class="hud-lbl">SCORE</div></div><div class="hud-center"><div class="wave-badge" id="waveBadge">WAVE 1</div><div class="combo-badge" id="comboBadge">x2 COMBO!</div></div><div class="hud-block"><div class="lives-row" id="livesRow">❤️❤️❤️</div><div class="hud-lbl">LIVES</div></div></div>
 <button id="pauseBtn" onclick="togglePause()">⏸</button>
-
-<!-- ZEN TIMER -->
 <div id="zenTimer">60</div>
+<div id="arena"></div>
+<div id="bottomHud"><div class="bar-group"><div class="bar-lbl">⚡ POWER</div><div class="bar-track"><div class="bar-fill power-fill" id="powerBar" style="width:0%"></div></div></div><div><button id="frenzyBtn" onclick="activateFrenzy()">⚡ FRENZY!</button><div id="activePUs" class="pu-active"></div></div><div class="bar-group"><div class="bar-lbl">XP LVL <span id="lvlDisp">1</span></div><div class="bar-track"><div class="bar-fill xp-fill" id="xpBar" style="width:0%"></div></div></div></div>
 
-<!-- ARENA -->
-<div id="arena" onclick="arenaClick(event)"></div>
-
-<!-- BOTTOM HUD -->
-<div id="bottomHud">
-  <div class="bar-group">
-    <div class="bar-lbl">⚡ POWER</div>
-    <div class="bar-track" style="width:160px"><div class="bar-fill power-fill" id="powerBar" style="width:0%"></div></div>
-  </div>
-  <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-    <button id="frenzyBtn" onclick="activateFrenzy()">⚡ FRENZY!</button>
-    <div id="activePUs" class="pu-active"></div>
-  </div>
-  <div class="bar-group" style="align-items:flex-end">
-    <div class="bar-lbl">XP</div>
-    <div class="bar-track" style="width:160px"><div class="bar-fill xp-fill" id="xpBar" style="width:0%"></div></div>
-    <div style="font-size:11px;color:var(--gray);font-weight:700">LVL <span id="lvlDisp">1</span></div>
-  </div>
-</div>
-
-<!-- TOAST -->
 <div id="toast"></div>
-
-<!-- PAUSE OVERLAY -->
-<div id="pauseOverlay">
-  <div class="pause-card">
-    <div class="pause-title">PAUSED ⏸</div>
-    <button class="pause-btn pb-resume" onclick="togglePause()">▶ RESUME</button>
-    <button class="pause-btn" style="background:#2a1860;color:var(--blue);margin-bottom:0" onclick="restartSame()">↺ RESTART</button>
-    <br>
-    <button class="pause-btn pb-quit" onclick="quitToMenu()" style="margin-bottom:0">🏠 MENU</button>
-  </div>
-</div>
-
-<!-- ACHIEVEMENTS OVERLAY -->
-<div id="achOverlay">
-  <div class="ach-card">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:'Fredoka One',cursive;font-size:26px;color:var(--yellow)">🏆 Achievements</div>
-      <button onclick="closeAchievements()" style="background:none;border:none;color:var(--gray);font-size:24px;cursor:pointer">✕</button>
-    </div>
-    <div class="ach-grid" id="achGrid"></div>
-    <div style="font-size:12px;color:var(--gray);text-align:center" id="achProgress"></div>
-  </div>
-</div>
-
-<!-- ACHIEVEMENT TOAST -->
-<div id="achieveToast">
-  <div class="ach-title">🏆 Achievement Unlocked!</div>
-  <div class="ach-name" id="achName"></div>
-  <div class="ach-desc" id="achDesc"></div>
-</div>
-
-<!-- GAME OVER -->
-<div id="overScreen" class="screen">
-  <div class="over-card">
-    <div class="over-medal" id="overMedal">🥇</div>
-    <div class="over-title">GAME OVER!</div>
-    <div class="over-msg" id="overMsg">Amazing run!</div>
-    <div class="new-best" id="newBestBanner" style="display:none">🌟 NEW BEST SCORE! 🌟</div>
-    <div class="stats-grid">
-      <div class="stat-cell"><div class="stat-num" id="rScore">0</div><div class="stat-lbl">SCORE</div></div>
-      <div class="stat-cell"><div class="stat-num" id="rBest">0</div><div class="stat-lbl">BEST</div></div>
-      <div class="stat-cell"><div class="stat-num" id="rCaught">0</div><div class="stat-lbl">CAUGHT</div></div>
-      <div class="stat-cell"><div class="stat-num" id="rWave">1</div><div class="stat-lbl">WAVE</div></div>
-      <div class="stat-cell"><div class="stat-num" id="rCombo">0</div><div class="stat-lbl">MAX COMBO</div></div>
-      <div class="stat-cell"><div class="stat-num" id="rMisses">0</div><div class="stat-lbl">MISSES</div></div>
-    </div>
-    <div class="over-btns">
-      <button class="ob ob-retry" onclick="startGame()">↺ RETRY</button>
-      <button class="ob ob-menu" onclick="quitToMenu()">🏠 MENU</button>
-    </div>
-  </div>
-</div>
+<div id="pauseOverlay"><div class="pause-card"><div class="pause-title">PAUSED</div><button class="pause-btn pb-resume" onclick="togglePause()">▶ RESUME</button><button class="pause-btn" style="background:#2a1860;color:var(--blue)" onclick="restartSame()">↺ RESTART</button><button class="pause-btn pb-quit" onclick="quitToMenu()">🏠 MENU</button></div></div>
+<div id="achieveToast"><div class="ach-title">🏆 Unlocked!</div><div class="ach-name" id="achName"></div><div class="ach-desc" id="achDesc"></div></div>
+<div id="achOverlay"><div class="ach-card"><div style="display:flex;justify-content:space-between"><div style="font-family:'Fredoka One',cursive;font-size:24px;color:var(--yellow)">🏆 Achievements</div><button onclick="closeAchievements()" style="background:none;border:none;color:gray;font-size:24px;cursor:pointer">✕</button></div><div class="ach-grid" id="achGrid"></div><div id="achProgress" style="font-size:12px;color:gray;text-align:center;margin-top:8px"></div></div></div>
+<div id="countdown"></div>
+<div id="overScreen" class="screen"><div class="over-card"><div class="over-medal" id="overMedal">🥇</div><div class="over-title">GAME OVER!</div><div class="over-msg" id="overMsg"></div><div class="new-best" id="newBestBanner" style="display:none;color:var(--yellow);margin:8px">🌟 NEW BEST! 🌟</div><div class="stats-grid"><div class="stat-cell"><div class="stat-num" id="rScore">0</div><div class="stat-lbl">SCORE</div></div><div class="stat-cell"><div class="stat-num" id="rBest">0</div><div class="stat-lbl">BEST</div></div><div class="stat-cell"><div class="stat-num" id="rCaught">0</div><div class="stat-lbl">CAUGHT</div></div><div class="stat-cell"><div class="stat-num" id="rWave">1</div><div class="stat-lbl">WAVE</div></div><div class="stat-cell"><div class="stat-num" id="rCombo">0</div><div class="stat-lbl">MAX COMBO</div></div><div class="stat-cell"><div class="stat-num" id="rMisses">0</div><div class="stat-lbl">MISSES</div></div></div><div class="over-btns"><button class="ob ob-retry" onclick="startGame()">↺ RETRY</button><button class="ob ob-menu" onclick="quitToMenu()">🏠 MENU</button></div></div></div>
 
 <script>
-// ─── ANIMATED BACKGROUND ───
-(function(){
-  const c=document.getElementById('bgCanvas');
-  const ctx=c.getContext('2d');
-  let W,H,stars=[],orbs=[];
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
-  resize();
-  window.addEventListener('resize',resize);
-  for(let i=0;i<180;i++) stars.push({x:Math.random()*2000,y:Math.random()*1200,r:Math.random()*1.5+0.2,a:Math.random()});
-  for(let i=0;i<6;i++) orbs.push({x:Math.random()*2000,y:Math.random()*1200,r:80+Math.random()*120,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,hue:Math.random()*360});
-  let t=0;
-  function draw(){
-    t++;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#0d0a1a';ctx.fillRect(0,0,W,H);
-    // orbs
-    orbs.forEach(o=>{
-      o.x+=o.vx;o.y+=o.vy;
-      if(o.x<-200)o.x=W+200;if(o.x>W+200)o.x=-200;
-      if(o.y<-200)o.y=H+200;if(o.y>H+200)o.y=-200;
-      const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
-      g.addColorStop(0,`hsla(${o.hue},70%,50%,0.06)`);
-      g.addColorStop(1,'transparent');
-      ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);
-      ctx.fillStyle=g;ctx.fill();
-    });
-    // stars
-    stars.forEach(s=>{
-      const twinkle=0.3+0.7*Math.abs(Math.sin(t*0.02+s.x));
-      ctx.beginPath();ctx.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${s.a*twinkle})`;ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-// ─── ACHIEVEMENTS ───
-const ACHIEVEMENTS = [
-  {id:'first_catch',name:'First Catch!',desc:'Catch your first clown',icon:'🤡',unlocked:false},
-  {id:'combo5',name:'Combo King',desc:'Get a 5x combo',icon:'🔥',unlocked:false},
-  {id:'combo10',name:'Unstoppable',desc:'Get a 10x combo',icon:'⚡',unlocked:false},
-  {id:'score500',name:'500 Club',desc:'Score 500 points',icon:'⭐',unlocked:false},
-  {id:'score2000',name:'High Roller',desc:'Score 2000 points',icon:'🏅',unlocked:false},
-  {id:'boss_kill',name:'Boss Slayer',desc:'Defeat a boss',icon:'👹',unlocked:false},
-  {id:'wave5',name:'Wave Rider',desc:'Reach wave 5',icon:'🌊',unlocked:false},
-  {id:'golden',name:'Golden Touch',desc:'Catch a golden clown',icon:'🌟',unlocked:false},
-  {id:'no_miss_wave',name:'Perfect Wave',desc:'Complete a wave without missing',icon:'💎',unlocked:false},
-  {id:'catch100',name:'Clown Magnet',desc:'Catch 100 clowns total',icon:'🎪',unlocked:false},
-];
-let unlockedAchs = JSON.parse(localStorage.getItem('clown_achs')||'[]');
-ACHIEVEMENTS.forEach(a=>{ if(unlockedAchs.includes(a.id)) a.unlocked=true; });
-function checkAch(id){
-  const a=ACHIEVEMENTS.find(x=>x.id===id);
-  if(a&&!a.unlocked){ a.unlocked=true; unlockedAchs.push(id); localStorage.setItem('clown_achs',JSON.stringify(unlockedAchs)); showAchToast(a); }
-}
-function showAchToast(a){
-  document.getElementById('achName').textContent=a.icon+' '+a.name;
-  document.getElementById('achDesc').textContent=a.desc;
-  const t=document.getElementById('achieveToast');
-  t.style.display='flex';
-  clearTimeout(t._tid);
-  t._tid=setTimeout(()=>t.style.display='none',3500);
-}
-function showAchievements(){
-  const grid=document.getElementById('achGrid');
-  grid.innerHTML='';
-  ACHIEVEMENTS.forEach(a=>{
-    const d=document.createElement('div');
-    d.className='ach-item'+(a.unlocked?'')+' '+(a.unlocked?'unlocked':'locked');
-    d.innerHTML=`<div class="ach-item-icon">${a.unlocked?a.icon:'🔒'}</div>
-      <div class="ach-item-info"><div class="ach-item-name">${a.name}</div><div class="ach-item-desc">${a.desc}</div></div>`;
-    grid.appendChild(d);
-  });
-  const count=ACHIEVEMENTS.filter(x=>x.unlocked).length;
-  document.getElementById('achProgress').textContent=`${count} / ${ACHIEVEMENTS.length} unlocked`;
-  document.getElementById('achOverlay').classList.add('show');
-}
-function closeAchievements(){ document.getElementById('achOverlay').classList.remove('show'); }
-
-// ─── PERSISTENCE ───
+// ---------- GLOBALS ----------
+let gameMode='classic', difficulty='easy';
+let score=0, lives=5, wave=0, caught=0, misses=0, combo=0, maxCombo=0, power=0;
+let running=false, paused=false, bossActive=false, bossHP=0, bossMaxHP=0;
+let spawnInt=null, waveTimer=null, zenCountdown=null, survivalDrainInt=null;
+let activePowerups={}, puIntervals={}, puTimeouts={};
+let waveMisses=0;
 let bestScore=parseInt(localStorage.getItem('clown_best')||0);
 let totalCaught=parseInt(localStorage.getItem('clown_total')||0);
 let playerLevel=parseInt(localStorage.getItem('clown_level')||1);
 let playerXP=parseInt(localStorage.getItem('clown_xp')||0);
-function savePersist(){
-  localStorage.setItem('clown_best',bestScore);
-  localStorage.setItem('clown_total',totalCaught);
-  localStorage.setItem('clown_level',playerLevel);
-  localStorage.setItem('clown_xp',playerXP);
-}
-document.getElementById('bestDisp').textContent=bestScore;
-document.getElementById('totalDisp').textContent=totalCaught;
 
-// ─── CONFIG ───
-const DIFF_CFG={
-  easy:   {spawnMs:1500,maxScreen:6, lives:5,speedMult:0.7,bombChance:0.04,clownHp:1,ptsMult:0.8},
-  medium: {spawnMs:1100,maxScreen:8, lives:3,speedMult:1.0,bombChance:0.12,clownHp:2,ptsMult:1.0},
-  hard:   {spawnMs:750, maxScreen:10,lives:2,speedMult:1.4,bombChance:0.18,clownHp:3,ptsMult:1.3},
-  insane: {spawnMs:450, maxScreen:14,lives:1,speedMult:2.0,bombChance:0.25,clownHp:4,ptsMult:2.0},
-};
-const CLOWN_TYPES=[
-  {e:'🤡',pts:10,hp:1,speed:1.0,life:3000},
-  {e:'🎪',pts:15,hp:1,speed:1.4,life:2500},
-  {e:'🎠',pts:20,hp:2,speed:0.7,life:3500},
-  {e:'🎯',pts:25,hp:1,speed:1.6,life:2200},
-  {e:'👻',pts:8, hp:1,speed:2.0,life:1800},
-  {e:'🎭',pts:30,hp:3,speed:0.9,life:4000},
-  {e:'🃏',pts:35,hp:2,speed:1.3,life:2800},
-];
-const BOSSES=[
-  {e:'🤡',name:'MEGA CLOWN',hp:20,pts:200,size:100},
-  {e:'👹',name:'DEMON CLOWN',hp:30,pts:350,size:120},
-  {e:'🎃',name:'SPOOKY CLOWN',hp:15,pts:150,size:90},
-  {e:'🐉',name:'DRAGON CLOWN',hp:40,pts:500,size:130},
-];
-const POWERUP_TYPES=[
-  {id:'freeze',e:'❄️',label:'FREEZE',color:'#4df',dur:5000},
-  {id:'double',e:'2️⃣',label:'2X PTS',color:'#ffd700',dur:8000},
-  {id:'shield',e:'🛡️',label:'SHIELD',color:'#2dc653',dur:10000},
-  {id:'magnet',e:'🧲',label:'MAGNET',color:'#ff6eb4',dur:6000},
-  {id:'slow',e:'🐢',label:'SLOW',color:'#a0a0ff',dur:7000},
-];
+const DIFF_CFG={ easy:{spawnMs:1500,maxScreen:6,lives:5,speedMult:0.7,bombChance:0.04,clownHp:1,ptsMult:0.8}, medium:{spawnMs:1100,maxScreen:8,lives:3,speedMult:1.0,bombChance:0.12,clownHp:2,ptsMult:1.0}, hard:{spawnMs:750,maxScreen:10,lives:2,speedMult:1.4,bombChance:0.18,clownHp:3,ptsMult:1.3}, insane:{spawnMs:450,maxScreen:14,lives:1,speedMult:2.0,bombChance:0.25,clownHp:4,ptsMult:2.0} };
+const CLOWN_TYPES=[{e:'🤡',pts:10,hp:1,speed:1.0,life:3000},{e:'🎪',pts:15,hp:1,speed:1.4,life:2500},{e:'🎠',pts:20,hp:2,speed:0.7,life:3500},{e:'🎯',pts:25,hp:1,speed:1.6,life:2200},{e:'👻',pts:8,hp:1,speed:2.0,life:1800},{e:'🎭',pts:30,hp:3,speed:0.9,life:4000},{e:'🃏',pts:35,hp:2,speed:1.3,life:2800}];
+const BOSSES=[{e:'🤡',name:'MEGA CLOWN',hp:20,pts:200},{e:'👹',name:'DEMON CLOWN',hp:30,pts:350},{e:'🎃',name:'SPOOKY CLOWN',hp:15,pts:150},{e:'🐉',name:'DRAGON CLOWN',hp:40,pts:500}];
+const POWERUP_TYPES=[{id:'freeze',e:'❄️',label:'FREEZE',dur:5000},{id:'double',e:'2️⃣',label:'2X PTS',dur:8000},{id:'shield',e:'🛡️',label:'SHIELD',dur:10000},{id:'magnet',e:'🧲',label:'MAGNET',dur:6000},{id:'slow',e:'🐢',label:'SLOW',dur:7000}];
 
-// ─── STATE ───
-let gameMode='classic',difficulty='easy';
-let score=0,lives=0,wave=0,caught=0,misses=0,combo=0,maxCombo=0,power=0;
-let running=false,paused=false,bossActive=false,bossHP=0,bossMaxHP=0;
-let spawnInt=null,waveTimer=null,zenCountdown=null;
-let activePowerups={};
-let waveMisses=0;
-let selectedMode='classic',selectedDiff='easy';
+// achievements
+let ACHIEVEMENTS=[{id:'first_catch',name:'First Catch!',desc:'Catch a clown',icon:'🤡'},{id:'combo5',name:'Combo King',desc:'5x combo',icon:'🔥'},{id:'combo10',name:'Unstoppable',desc:'10x combo',icon:'⚡'},{id:'score500',name:'500 Club',desc:'500 points',icon:'⭐'},{id:'score2000',name:'High Roller',desc:'2000 points',icon:'🏅'},{id:'boss_kill',name:'Boss Slayer',desc:'Defeat a boss',icon:'👹'},{id:'wave5',name:'Wave Rider',desc:'Reach wave 5',icon:'🌊'},{id:'golden',name:'Golden Touch',desc:'Catch golden clown',icon:'🌟'},{id:'no_miss_wave',name:'Perfect Wave',desc:'Wave without misses',icon:'💎'},{id:'catch100',name:'Clown Magnet',desc:'100 clowns',icon:'🎪'}];
+let unlockedAchs=JSON.parse(localStorage.getItem('clown_achs')||'[]');
+ACHIEVEMENTS.forEach(a=>{ if(unlockedAchs.includes(a.id)) a.unlocked=true; else a.unlocked=false; });
 
-function selectMode(btn){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('sel-mode'));
-  btn.classList.add('sel-mode');
-  selectedMode=btn.dataset.mode;
-}
-function selectDiff(btn){
-  document.querySelectorAll('.diff-pill').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  selectedDiff=btn.dataset.d;
-}
+function checkAch(id){ let a=ACHIEVEMENTS.find(x=>x.id===id); if(a&&!a.unlocked){ a.unlocked=true; unlockedAchs.push(id); localStorage.setItem('clown_achs',JSON.stringify(unlockedAchs)); showAchToast(a); } }
+function showAchToast(a){ document.getElementById('achName').innerHTML=`${a.icon} ${a.name}`; document.getElementById('achDesc').innerText=a.desc; let t=document.getElementById('achieveToast'); t.style.display='flex'; clearTimeout(t._tid); t._tid=setTimeout(()=>t.style.display='none',3000); }
+function showAchievements(){ let grid=document.getElementById('achGrid'); grid.innerHTML=''; ACHIEVEMENTS.forEach(a=>{ let d=document.createElement('div'); d.className=`ach-item ${a.unlocked?'unlocked':'locked'}`; d.innerHTML=`<div class="ach-item-icon">${a.unlocked?a.icon:'🔒'}</div><div class="ach-item-info"><div class="ach-item-name">${a.name}</div><div class="ach-item-desc">${a.desc}</div></div>`; grid.appendChild(d); }); let cnt=ACHIEVEMENTS.filter(x=>x.unlocked).length; document.getElementById('achProgress').innerText=`${cnt}/${ACHIEVEMENTS.length} unlocked`; document.getElementById('achOverlay').classList.add('show'); }
+function closeAchievements(){ document.getElementById('achOverlay').classList.remove('show'); }
+function savePersist(){ localStorage.setItem('clown_best',bestScore); localStorage.setItem('clown_total',totalCaught); localStorage.setItem('clown_level',playerLevel); localStorage.setItem('clown_xp',playerXP); }
+document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught;
 
-// ─── GAME START ───
-async function startGame(){
-  gameMode=selectedMode; difficulty=selectedDiff;
-  const cfg=DIFF_CFG[difficulty];
-  score=0;lives=cfg.lives;wave=0;caught=0;misses=0;combo=0;maxCombo=0;power=0;
-  running=false;paused=false;bossActive=false;waveMisses=0;activePowerups={};
-
-  showScreen(null);
-  clearArena();
-  document.getElementById('hud').classList.add('show');
-  document.getElementById('bottomHud').classList.add('show');
-  document.getElementById('arena').classList.add('show');
-  document.getElementById('pauseBtn').classList.add('show');
-  document.getElementById('activePUs').innerHTML='';
-  document.getElementById('frenzyBtn').classList.remove('ready');
-  updateHUD();
-
-  if(gameMode==='zen') document.getElementById('zenTimer').style.display='block';
-  else document.getElementById('zenTimer').style.display='none';
-
-  await countdown321();
-  running=true;
-
-  if(gameMode==='boss') startBossRush();
-  else nextWave();
-}
-
-function countdown321(){
-  return new Promise(res=>{
-    const el=document.getElementById('countdown');
-    el.classList.add('show');
-    let n=3;
-    el.innerHTML=`<div class="cd-num">${n}</div>`;
-    const t=setInterval(()=>{
-      n--;
-      if(n<=0){ clearInterval(t); el.classList.remove('show'); res(); return; }
-      el.innerHTML=`<div class="cd-num">${n==='GO'?'GO!':n}</div>`;
-    },800);
-    setTimeout(()=>{el.innerHTML=`<div class="cd-num" style="color:#2dc653">GO!</div>`;},2400);
-  });
-}
-
-// ─── WAVES ───
-function nextWave(){
-  if(!running) return;
-  clearInterval(spawnInt);
-  clearTimeout(waveTimer);
-  wave++;
-  updateHUD();
-  waveMisses=0;
-  showToast('🌊 WAVE '+wave+'!');
-
-  // Boss every 5 waves in classic
-  if(gameMode==='classic' && wave%5===0){
-    setTimeout(()=>startBoss(), 1500);
-    return;
-  }
-
-  const cfg=DIFF_CFG[difficulty];
-  const delay=Math.max(300, cfg.spawnMs - wave*30);
-  const maxOn=cfg.maxScreen+Math.floor(wave/3);
-
-  spawnInt=setInterval(()=>{
-    if(paused||!running||bossActive) return;
-    if(document.querySelectorAll('.clown:not(.boss-wrap)').length >= maxOn) return;
-    spawnClown();
-  }, delay);
-
-  // Wave ends after 20s + escalate
-  waveTimer=setTimeout(()=>{
-    if(waveMisses===0) checkAch('no_miss_wave');
-    nextWave();
-  }, 20000);
-}
-
-// ─── ZEN MODE ───
-let zenSecs=60;
-function startZenWave(){
-  zenSecs=60;
-  document.getElementById('zenTimer').textContent='60';
-  clearInterval(zenCountdown);
-  zenCountdown=setInterval(()=>{
-    if(paused) return;
-    zenSecs--;
-    document.getElementById('zenTimer').textContent=zenSecs;
-    if(zenSecs<=0){ clearInterval(zenCountdown); gameOver(); }
-  },1000);
-  // No bombs in zen
-  const cfg=DIFF_CFG[difficulty];
-  spawnInt=setInterval(()=>{
-    if(paused||!running) return;
-    if(document.querySelectorAll('.clown').length>=8) return;
-    spawnClown(true);
-  }, cfg.spawnMs);
-}
-
-// ─── SPAWN CLOWN ───
-function spawnClown(noContraband=false){
-  const cfg=DIFF_CFG[difficulty];
-  const r=Math.random();
-  let type,isBomb=false,isGolden=false;
-  if(!noContraband && r<cfg.bombChance+wave*0.008){ isBomb=true; }
-  else if(r<(noContraband?0.08:cfg.bombChance+wave*0.008+0.06)){ isGolden=true; }
-  else {
-    const maxT=Math.min(CLOWN_TYPES.length,1+Math.floor(wave/2));
-    type=CLOWN_TYPES[Math.floor(Math.random()*maxT)];
-  }
-
-  const arena=document.getElementById('arena');
-  const aW=arena.offsetWidth,aH=arena.offsetHeight;
-  const el=document.createElement('div');
-  el.className='clown'+(isBomb?' bomb':'')+(isGolden?' golden':'');
-
-  const x=30+Math.random()*(aW-100);
-  const y=80+Math.random()*(aH-170);
-  el.style.left=x+'px';el.style.top=y+'px';el.style.position='absolute';
-
-  let maxHp=(isBomb?1:isGolden?1:(type.hp||1))*cfg.clownHp;
-  let hp=maxHp;
-  const emoji=isBomb?'💣':isGolden?'⭐':(type.e||'🤡');
-  const pts=isBomb?0:isGolden?60:(type.pts||10);
-  const lifeMs=activePowerups.slow
-    ? (isGolden||isBomb?3000:5500)
-    : activePowerups.freeze
-    ? 99999
-    : Math.max(1000,(isGolden?2200:isBomb?2500:((type.life||3000)-wave*60))/cfg.speedMult);
-
-  el.innerHTML=`<span class="c-emoji">${emoji}</span>${maxHp>1?`<div class="c-hp-wrap"><div class="c-hp" style="width:100%"></div></div>`:''}`;
-
-  const startT=Date.now();
-  const shrinkId=setInterval(()=>{
-    if(paused||activePowerups.freeze) return;
-    const ratio=Math.max(0,1-(Date.now()-startT)/lifeMs);
-    el.style.opacity=0.35+ratio*0.65;
-    if(ratio<=0){ clearInterval(shrinkId); missClown(el,isBomb,isGolden,x,y); }
-  },80);
-  el._shrink=shrinkId;
-
-  el.addEventListener('click',e=>{
-    e.stopPropagation();
-    if(paused||!running) return;
-    if(activePowerups.magnet){
-      // magnet: catch all nearby
-      catchAllNearby(x,y,150);
-    }
-    hp--;
-    if(hp<=0){
-      clearInterval(shrinkId);
-      catchClown(el,{isBomb,isGolden,pts,emoji},x,y);
-    } else {
-      const bar=el.querySelector('.c-hp');
-      if(bar) bar.style.width=Math.round((hp/maxHp)*100)+'%';
-      el.style.transform='scale(0.75) rotate(10deg)';
-      setTimeout(()=>el.style.transform='',100);
-    }
-  });
-
-  arena.appendChild(el);
-}
-
-function missClown(el,isBomb,isGolden,x,y){
-  if(!el.parentNode) return;
-  el.remove();
-  if(isBomb) return;
-  misses++; waveMisses++;
-  combo=0; updateCombo();
-  if(!activePowerups.shield){ loseLife(); }
-  else { removeActivePU('shield'); showToast('🛡️ Shield absorbed it!'); }
-  popMiss(x,y,'Escaped! 😱');
-}
-
-function catchClown(el,info,x,y){
-  if(!el.parentNode) return;
-  el.remove();
-  if(info.isBomb){
-    combo=0; updateCombo();
-    shakeScreen();
-    if(!activePowerups.shield){ loseLife(); showToast('💥 BOMB!'); }
-    else { removeActivePU('shield'); showToast('🛡️ Shield saved you!'); }
-    popParticle(x,y,'💥',50);
-    return;
-  }
-  caught++;totalCaught++;
-  checkAch('first_catch');
-  if(info.isGolden) checkAch('golden');
-  if(totalCaught>=100) checkAch('catch100');
-
-  let pts=Math.round(info.pts*(activePowerups.double?2:1)*(1+combo*0.15)*DIFF_CFG[difficulty].ptsMult);
-  score+=pts; power=Math.min(100,power+10);
-  combo++; if(combo>maxCombo) maxCombo=combo;
-  if(combo>=5) checkAch('combo5');
-  if(combo>=10) checkAch('combo10');
-  if(score>=500) checkAch('score500');
-  if(score>=2000) checkAch('score2000');
-
-  updateHUD(); updateCombo();
-  const col=info.isGolden?'#ffd60a':activePowerups.double?'#ff6eb4':'#fff';
-  popParticle(x,y,info.isGolden?'🌟':'✨',36);
-  popScore(x,y,(pts>0?'+':'')+pts,col);
-  if(info.isGolden) showToast('⭐ GOLDEN! +'+pts+' pts!');
-
-  // powerup drop chance
-  if(Math.random()<0.15+wave*0.01) spawnPowerup(x,y);
-  savePersist();
-  document.getElementById('bestDisp').textContent=bestScore;
-  document.getElementById('totalDisp').textContent=totalCaught;
-}
-
-function catchAllNearby(cx,cy,radius){
-  document.querySelectorAll('.clown:not(.bomb)').forEach(el=>{
-    const ex=parseFloat(el.style.left),ey=parseFloat(el.style.top);
-    if(Math.hypot(ex-cx,ey-cy)<radius){
-      clearInterval(el._shrink);
-      const pts=10;
-      popParticle(ex,ey,'🧲',28);
-      popScore(ex,ey,'+'+pts,'#ff6eb4');
-      score+=pts; caught++;
-      el.remove();
-    }
-  });
-  updateHUD();
-}
-
-function loseLife(){
-  lives=Math.max(0,lives-1);
-  updateHUD();
-  if(lives<=0) gameOver();
-}
-
-// ─── BOSS ───
-function startBoss(){
-  bossActive=true;
-  clearInterval(spawnInt);
-  const b=BOSSES[Math.min(Math.floor(wave/5)-1,BOSSES.length-1)];
-  bossHP=bossMaxHP=b.hp+wave*2;
-  showToast('👹 '+b.name+' APPEARS!');
-
-  const arena=document.getElementById('arena');
-  const bossEl=document.createElement('div');
-  bossEl.className='boss-wrap';bossEl.id='bossEl';
-  bossEl.innerHTML=`<div class="boss-name">${b.name}</div>
-    <span class="boss-emoji">${b.e}</span>
-    <div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`;
-  bossEl.addEventListener('click',e=>{ e.stopPropagation(); hitBoss(b); });
-  arena.appendChild(bossEl);
-}
-
-function hitBoss(b){
-  if(paused||!running) return;
-  bossHP--;
-  const pct=Math.round((bossHP/bossMaxHP)*100);
-  const bar=document.getElementById('bossHpBar');
-  if(bar) bar.style.width=pct+'%';
-  popParticle(window.innerWidth/2,window.innerHeight/2-80,'💥',30);
-  if(bossHP<=0){
-    const el=document.getElementById('bossEl');
-    if(el) el.remove();
-    bossActive=false;
-    const pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult);
-    score+=pts; caught+=5;
-    popScore(window.innerWidth/2,window.innerHeight/2,'BOSS DOWN! +'+pts,'#ffd60a');
-    showToast('🎉 BOSS DEFEATED! +'+pts+' pts!');
-    checkAch('boss_kill');
-    updateHUD();
-    setTimeout(()=>nextWave(),2000);
-  }
-}
-
-// ─── BOSS RUSH ───
-function startBossRush(){
-  wave++;
-  updateHUD();
-  showToast('👹 BOSS RUSH!');
-  const b=BOSSES[(wave-1)%BOSSES.length];
-  setTimeout(()=>startBossForRush(b),1000);
-}
-function startBossForRush(b){
-  bossActive=true;
-  bossHP=bossMaxHP=b.hp;
-  showToast('👹 '+b.name+'!');
-  const arena=document.getElementById('arena');
-  const bossEl=document.createElement('div');
-  bossEl.className='boss-wrap';bossEl.id='bossEl';
-  bossEl.innerHTML=`<div class="boss-name">${b.name}</div>
-    <span class="boss-emoji">${b.e}</span>
-    <div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`;
-  bossEl.addEventListener('click',e=>{
-    e.stopPropagation();
-    if(paused||!running) return;
-    bossHP--;
-    const pct=Math.round((bossHP/bossMaxHP)*100);
-    const bar=document.getElementById('bossHpBar');
-    if(bar) bar.style.width=pct+'%';
-    popParticle(window.innerWidth/2,window.innerHeight/2-80,'💥',28);
-    if(bossHP<=0){
-      const el=document.getElementById('bossEl'); if(el) el.remove();
-      bossActive=false;
-      const pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult);
-      score+=pts;
-      popScore(window.innerWidth/2,window.innerHeight/2,'BOSS DOWN! +'+pts,'#ffd60a');
-      showToast('💥 BOSS SLAIN!');
-      checkAch('boss_kill');
-      updateHUD();
-      if(wave>=BOSSES.length*2){ showToast('🎉 ALL BOSSES DEFEATED!'); setTimeout(gameOver,2000); }
-      else setTimeout(()=>startBossRush(),2000);
-    }
-  });
-  arena.appendChild(bossEl);
-}
-
-// ─── POWERUPS ───
-function spawnPowerup(x,y){
-  const pu=POWERUP_TYPES[Math.floor(Math.random()*POWERUP_TYPES.length)];
-  const arena=document.getElementById('arena');
-  const el=document.createElement('div');
-  el.style.cssText=`position:absolute;left:${x}px;top:${y+10}px;z-index:35;cursor:pointer;text-align:center;font-size:32px;animation:bounceIn 0.3s both;filter:drop-shadow(0 0 8px ${pu.color})`;
-  el.textContent=pu.e;
-  el.title=pu.label;
-  let alive=true;
-  const tid=setTimeout(()=>{ alive=false; el.remove(); },4500);
-  el.addEventListener('click',e=>{
-    e.stopPropagation();
-    if(!alive) return;
-    alive=false; clearTimeout(tid); el.remove();
-    activatePU(pu);
-  });
-  arena.appendChild(el);
-}
-
-function activatePU(pu){
-  if(activePowerups[pu.id]) return;
-  activePowerups[pu.id]=true;
-  showToast(pu.e+' '+pu.label+' ACTIVATED!');
-  const puRow=document.getElementById('activePUs');
-  const pill=document.createElement('div');
-  pill.className='pu-pill';pill.id='pu_'+pu.id;
-  let secs=Math.round(pu.dur/1000);
-  pill.innerHTML=`${pu.e} <span style="color:${pu.color}">${pu.label}</span> <span class="pu-timer" id="put_${pu.id}">${secs}s</span>`;
-  puRow.appendChild(pill);
-  const countdown=setInterval(()=>{
-    if(paused) return;
-    secs--;
-    const ts=document.getElementById('put_'+pu.id);
-    if(ts) ts.textContent=secs+'s';
-    if(secs<=0){ clearInterval(countdown); removeActivePU(pu.id); }
-  },1000);
-  setTimeout(()=>removeActivePU(pu.id), pu.dur);
-}
-function removeActivePU(id){
-  delete activePowerups[id];
-  const el=document.getElementById('pu_'+id); if(el) el.remove();
-}
-
-// ─── FRENZY ───
-function activateFrenzy(){
-  if(power<100||!running||paused) return;
-  power=0; updateHUD();
-  document.getElementById('frenzyBtn').classList.remove('ready');
-  activatePU({id:'double',e:'2️⃣',label:'FRENZY 2X',color:'#ffd700',dur:6000});
-  showToast('⚡ FRENZY MODE!');
-  for(let i=0;i<6;i++) setTimeout(()=>spawnClown(),i*200);
-}
-
-// ─── ARENA CLICK (miss penalty) ───
-function arenaClick(e){
-  if(e.target.id!=='arena') return;
-  if(!running||paused) return;
-  if(gameMode==='zen') return;
-  // small miss penalty: break combo
-  combo=Math.max(0,combo-1);
-  updateCombo();
-}
-
-// ─── SURVIVAL: timed lives drain ───
-let survivalDrain=null;
-function startSurvivalDrain(){
-  clearInterval(survivalDrain);
-  survivalDrain=setInterval(()=>{
-    if(!running||paused) return;
-    // lose a life every 30s
-  },30000);
-}
-
-// ─── HUD ───
+// helpers
 function updateHUD(){
-  document.getElementById('hScore').textContent=score;
-  document.getElementById('waveBadge').textContent=gameMode==='zen'?'ZEN MODE':gameMode==='boss'?'BOSS '+wave:'WAVE '+wave;
-  const lr=document.getElementById('livesRow');
-  if(lives<=0) lr.textContent='💔';
-  else if(lives<=5) lr.textContent='❤️'.repeat(lives);
-  else lr.textContent='❤️×'+lives;
-  // power bar
-  document.getElementById('powerBar').style.width=Math.round(power)+'%';
-  const fb=document.getElementById('frenzyBtn');
-  if(power>=100) fb.classList.add('ready'); else fb.classList.remove('ready');
-  // xp bar
-  const xpNeeded=playerLevel*100;
-  document.getElementById('xpBar').style.width=Math.round((playerXP%xpNeeded)/xpNeeded*100)+'%';
-  document.getElementById('lvlDisp').textContent=playerLevel;
+  document.getElementById('hScore').innerText=score;
+  document.getElementById('waveBadge').innerHTML=gameMode==='zen'?'🌈 ZEN MODE':gameMode==='boss'?`BOSS ${wave}`:`WAVE ${wave}`;
+  let lr=document.getElementById('livesRow'); lr.innerHTML=lives<=0?'💔':'❤️'.repeat(Math.min(lives,5))+(lives>5?`×${lives}`:'');
+  document.getElementById('powerBar').style.width=Math.min(100,power)+'%';
+  if(power>=100) document.getElementById('frenzyBtn').classList.add('ready'); else document.getElementById('frenzyBtn').classList.remove('ready');
+  let xpNeeded=playerLevel*100; let xpPercent=(playerXP%xpNeeded)/xpNeeded*100;
+  document.getElementById('xpBar').style.width=xpPercent+'%'; document.getElementById('lvlDisp').innerText=playerLevel;
   if(wave>=5) checkAch('wave5');
 }
-function updateCombo(){
-  const cb=document.getElementById('comboBadge');
-  if(combo>=2){ cb.classList.add('show'); cb.textContent='x'+combo+' COMBO!'; }
-  else cb.classList.remove('show');
+function updateCombo(){ let cb=document.getElementById('comboBadge'); if(combo>=2){ cb.classList.add('show'); cb.innerText=`x${combo} COMBO!`; } else cb.classList.remove('show'); }
+function showToast(msg){ let t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',2000); }
+function popParticle(x,y,emoji,size){ let el=document.createElement('div'); el.className='particle'; el.style.cssText=`left:${x}px;top:${y}px;font-size:${size||28}px`; el.innerText=emoji; document.body.appendChild(el); setTimeout(()=>el.remove(),700); }
+function popScore(x,y,txt,col){ let el=document.createElement('div'); el.className='score-pop'; el.style.cssText=`left:${x}px;top:${y}px;color:${col||'#fff'}`; el.innerText=txt; document.body.appendChild(el); setTimeout(()=>el.remove(),900); }
+function shakeScreen(){ let a=document.getElementById('arena'); a.style.transform='translateX(8px)'; setTimeout(()=>a.style.transform='translateX(-8px)',50); setTimeout(()=>a.style.transform='',100); }
+function clearArena(){ document.getElementById('arena').innerHTML=''; if(spawnInt) clearInterval(spawnInt); if(waveTimer) clearTimeout(waveTimer); if(zenCountdown) clearInterval(zenCountdown); if(survivalDrainInt) clearInterval(survivalDrainInt); for(let id in puIntervals) clearInterval(puIntervals[id]); for(let id in puTimeouts) clearTimeout(puTimeouts[id]); activePowerups={}; document.getElementById('activePUs').innerHTML=''; }
+function removeActivePU(id){ if(activePowerups[id]){ delete activePowerups[id]; if(puIntervals[id]) clearInterval(puIntervals[id]); if(puTimeouts[id]) clearTimeout(puTimeouts[id]); let pill=document.getElementById(`pu_${id}`); if(pill) pill.remove(); } }
+function activatePU(pu){ if(activePowerups[pu.id]) return; activePowerups[pu.id]=true; showToast(`${pu.e} ${pu.label}!`); let puDiv=document.getElementById('activePUs'); let pill=document.createElement('div'); pill.className='pu-pill'; pill.id=`pu_${pu.id}`; let secs=Math.floor(pu.dur/1000); pill.innerHTML=`${pu.e} <span style="color:${pu.color||'#fff'}">${pu.label}</span> <span class="pu-timer" id="put_${pu.id}">${secs}s</span>`; puDiv.appendChild(pill); let interval=setInterval(()=>{ if(paused) return; secs--; let ts=document.getElementById(`put_${pu.id}`); if(ts) ts.innerText=`${secs}s`; if(secs<=0){ removeActivePU(pu.id); } },1000); puIntervals[pu.id]=interval; let tm=setTimeout(()=>removeActivePU(pu.id),pu.dur); puTimeouts[pu.id]=tm; }
+
+// ---------- GAME MECHANICS ----------
+function loseLife(){ lives--; updateHUD(); if(lives<=0) gameOver(); else shakeScreen(); }
+
+function addXP(amount){ playerXP+=amount; let needed=playerLevel*100; while(playerXP>=needed){ playerLevel++; playerXP-=needed; showToast(`🎉 LEVEL ${playerLevel}!`); needed=playerLevel*100; } savePersist(); updateHUD(); }
+
+function catchClown(el,info,x,y){ if(!el.parentNode) return; el.remove(); if(info.isBomb){ combo=0; updateCombo(); if(!activePowerups.shield){ loseLife(); showToast('💥 BOMB!'); } else { removeActivePU('shield'); showToast('🛡️ Shield saved!'); } popParticle(x,y,'💣',45); return; }
+  caught++; totalCaught++; checkAch('first_catch'); if(info.isGolden) checkAch('golden'); if(totalCaught>=100) checkAch('catch100');
+  let mult=activePowerups.double?2:1; let pts=Math.round(info.pts*(1+combo*0.15)*DIFF_CFG[difficulty].ptsMult*mult);
+  score+=pts; power=Math.min(100,power+8); combo++; if(combo>maxCombo) maxCombo=combo; if(combo>=5) checkAch('combo5'); if(combo>=10) checkAch('combo10'); if(score>=500) checkAch('score500'); if(score>=2000) checkAch('score2000');
+  addXP(Math.floor(pts/5+3)); updateHUD(); updateCombo(); popParticle(x,y,info.isGolden?'🌟':'✨',32); popScore(x,y,`+${pts}`,info.isGolden?'#ffd60a':'#fff'); if(info.isGolden) showToast(`⭐ GOLDEN! +${pts}`);
+  if(Math.random()<0.12+wave*0.008) spawnPowerup(x,y);
+  savePersist(); document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught;
 }
 
-// ─── PARTICLES ───
-function popParticle(x,y,emoji,size){
-  const el=document.createElement('div');
-  el.className='particle';
-  el.style.cssText=`left:${x}px;top:${y}px;font-size:${size||28}px`;
-  el.textContent=emoji;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),800);
-}
-function popScore(x,y,txt,color){
-  const el=document.createElement('div');
-  el.className='score-pop';
-  el.style.cssText=`left:${x}px;top:${y}px;color:${color||'#fff'}`;
-  el.textContent=txt;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),1000);
-}
-function popMiss(x,y,txt){
-  const el=document.createElement('div');
-  el.className='miss-pop';
-  el.style.cssText=`left:${x}px;top:${y}px`;
-  el.textContent=txt;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),900);
-}
+function catchAllNearby(cx,cy,rad){ document.querySelectorAll('.clown:not(.bomb)').forEach(el=>{ let l=parseFloat(el.style.left),t=parseFloat(el.style.top); if(Math.hypot(l-cx,t-cy)<rad){ clearInterval(el._shrink); let pts=15; score+=pts; caught++; popScore(l,t,`+${pts}`,'#ff6eb4'); popParticle(l,t,'🧲',28); el.remove(); updateHUD(); } }); }
 
-// ─── TOAST ───
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.style.display='block';
-  clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',2200);
+function spawnClown(noBomb=false){ let cfg=DIFF_CFG[difficulty]; let arena=document.getElementById('arena'); let w=arena.offsetWidth,h=arena.offsetHeight; if(w<100) return; let isBomb=false,isGolden=false,type=null; let r=Math.random(); if(!noBomb && r<cfg.bombChance+wave*0.008) isBomb=true; else if(!noBomb && r<(cfg.bombChance+0.08)) isGolden=true; else type=CLOWN_TYPES[Math.floor(Math.random()*Math.min(CLOWN_TYPES.length,1+Math.floor(wave/2)))];
+  let maxHp=(isBomb?1:isGolden?1:(type?.hp||1))*cfg.clownHp; let hp=maxHp; let emoji=isBomb?'💣':isGolden?'⭐':(type?.e||'🤡'); let pts=isBomb?0:isGolden?60:(type?.pts||10); let lifeMs=activePowerups.slow?5500:(activePowerups.freeze?99999:Math.max(1000,(isGolden?2200:isBomb?2500:((type?.life||3000)-wave*50))/cfg.speedMult));
+  let el=document.createElement('div'); el.className=`clown ${isBomb?'bomb':''} ${isGolden?'golden':''}`; let x=30+Math.random()*(w-80); let y=70+Math.random()*(h-140); el.style.left=x+'px'; el.style.top=y+'px'; el.innerHTML=`<span class="c-emoji">${emoji}</span>${maxHp>1?`<div class="c-hp-wrap"><div class="c-hp" style="width:100%"></div></div>`:''}`;
+  let startT=Date.now(); let shrinkId=setInterval(()=>{ if(paused||activePowerups.freeze) return; let ratio=Math.max(0,1-(Date.now()-startT)/lifeMs); el.style.opacity=0.4+ratio*0.6; if(ratio<=0){ clearInterval(shrinkId); if(el.parentNode){ el.remove(); if(!isBomb){ misses++; waveMisses++; combo=0; updateCombo(); if(!activePowerups.shield) loseLife(); else removeActivePU('shield'); popMiss(x,y,'Missed!'); } } } },100);
+  el._shrink=shrinkId;
+  el.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running) return; if(activePowerups.magnet){ catchAllNearby(x,y,160); return; } hp--; if(hp<=0){ clearInterval(shrinkId); catchClown(el,{isBomb,isGolden,pts,emoji},x,y); } else { let bar=el.querySelector('.c-hp'); if(bar) bar.style.width=Math.round((hp/maxHp)*100)+'%'; el.style.transform='scale(0.75)'; setTimeout(()=>el.style.transform='',100); } });
+  arena.appendChild(el);
 }
+function popMiss(x,y){ let d=document.createElement('div'); d.className='miss-pop'; d.style.cssText=`left:${x}px;top:${y}px`; d.innerText='❌'; document.body.appendChild(d); setTimeout(()=>d.remove(),700); }
+function spawnPowerup(x,y){ let pu=POWERUP_TYPES[Math.floor(Math.random()*POWERUP_TYPES.length)]; let el=document.createElement('div'); el.style.cssText=`position:absolute;left:${x}px;top:${y+15}px;z-index:35;cursor:pointer;font-size:34px;animation:bounceIn 0.2s;filter:drop-shadow(0 0 6px gold)`; el.innerText=pu.e; let alive=true; let tid=setTimeout(()=>{ alive=false; if(el.parentNode) el.remove(); },4500); el.addEventListener('click',(e)=>{ e.stopPropagation(); if(!alive||!running||paused) return; alive=false; clearTimeout(tid); el.remove(); activatePU(pu); }); document.getElementById('arena').appendChild(el); }
+function activateFrenzy(){ if(power<100||!running||paused) return; power=0; updateHUD(); document.getElementById('frenzyBtn').classList.remove('ready'); activatePU({id:'double',e:'2️⃣',label:'FRENZY 2X',dur:6000}); showToast('⚡ FRENZY!'); for(let i=0;i<5;i++) setTimeout(()=>spawnClown(gameMode==='zen'),i*180); }
 
-// ─── SCREEN SHAKE ───
-function shakeScreen(){
-  const a=document.getElementById('arena');
-  a.style.transform='translateX(10px)';
-  setTimeout(()=>a.style.transform='translateX(-10px)',60);
-  setTimeout(()=>a.style.transform='',120);
-}
+// Wave / Boss logic
+function nextWave(){ if(!running||bossActive) return; clearInterval(spawnInt); clearTimeout(waveTimer); wave++; updateHUD(); waveMisses=0; showToast(`🌊 WAVE ${wave}`); if(gameMode==='classic' && wave%5===0){ setTimeout(()=>startBoss(),1200); return; } let cfg=DIFF_CFG[difficulty]; let delay=Math.max(350,cfg.spawnMs-wave*25); let maxOn=cfg.maxScreen+Math.floor(wave/3); spawnInt=setInterval(()=>{ if(!paused&&running&&!bossActive&&document.querySelectorAll('.clown').length<maxOn) spawnClown(gameMode==='zen'); },delay); waveTimer=setTimeout(()=>{ if(waveMisses===0) checkAch('no_miss_wave'); nextWave(); },21000); }
+function startBoss(){ bossActive=true; clearInterval(spawnInt); let idx=Math.min(Math.floor(wave/5)-1,BOSSES.length-1); let b=BOSSES[idx]; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.5); showToast(`👹 ${b.name} APPEARS!`); let arena=document.getElementById('arena'); let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let pct=(bossHP/bossMaxHP)*100; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=pct+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',36); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=3; popScore(window.innerWidth/2,window.innerHeight/2,`BOSS +${pts}`,'#ffd60a'); showToast('🎉 BOSS DEFEATED!'); checkAch('boss_kill'); updateHUD(); setTimeout(()=>nextWave(),1500); } }); arena.appendChild(bossEl); }
 
-// ─── PAUSE ───
-function togglePause(){
-  paused=!paused;
-  document.getElementById('pauseOverlay').classList.toggle('show',paused);
-  document.getElementById('pauseBtn').textContent=paused?'▶':'⏸';
-}
+function startBossRush(){ wave++; updateHUD(); let b=BOSSES[(wave-1)%BOSSES.length]; bossActive=true; let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.2); bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=(bossHP/bossMaxHP)*100+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',30); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=2; showToast('⚔️ BOSS SLAIN!'); checkAch('boss_kill'); updateHUD(); if(wave>=BOSSES.length*2){ showToast('🏆 VICTORY!'); setTimeout(gameOver,1800); } else setTimeout(()=>startBossRush(),1500); } }); document.getElementById('arena').appendChild(bossEl); }
 
-// ─── UTILS ───
-function clearArena(){
-  const a=document.getElementById('arena');
-  a.innerHTML='';
-  clearInterval(spawnInt);clearTimeout(waveTimer);clearInterval(zenCountdown);
-}
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  if(name) document.getElementById(name+'Screen').classList.add('active');
-}
+function startZenWave(){ let secs=60; document.getElementById('zenTimer').style.display='block'; zenCountdown=setInterval(()=>{ if(paused) return; secs--; document.getElementById('zenTimer').innerText=secs; if(secs<=0){ clearInterval(zenCountdown); gameOver(); } },1000); let cfg=DIFF_CFG[difficulty]; spawnInt=setInterval(()=>{ if(paused&&running) return; if(document.querySelectorAll('.clown').length<10) spawnClown(true); },cfg.spawnMs); }
 
-// ─── GAME OVER ───
-function gameOver(){
-  running=false; paused=false;
-  clearArena();
-  document.getElementById('hud').classList.remove('show');
-  document.getElementById('bottomHud').classList.remove('show');
-  document.getElementById('arena').classList.remove('show');
-  document.getElementById('pauseBtn').classList.remove('show');
-  document.getElementById('pauseOverlay').classList.remove('show');
-  document.getElementById('zenTimer').style.display='none';
+function arenaClick(e){ if(e.target.id!=='arena') return; if(!running||paused||gameMode==='zen') return; combo=Math.max(0,combo-1); updateCombo(); }
 
-  // XP gain
-  const xpGain=Math.round(score/5+caught*2+wave*10);
-  playerXP+=xpGain;
-  const xpNeeded=playerLevel*100;
-  if(playerXP>=xpNeeded){ playerLevel++; playerXP-=xpNeeded; showToast('🎉 LEVEL UP! Lvl '+playerLevel); }
+// Game Flow
+async function countdown321(){ return new Promise(res=>{ let el=document.getElementById('countdown'); el.classList.add('show'); let n=3; el.innerHTML=`<div class="cd-num">${n}</div>`; let t=setInterval(()=>{ n--; if(n<=0){ clearInterval(t); el.classList.remove('show'); res(); } else el.innerHTML=`<div class="cd-num">${n}</div>`; },800); setTimeout(()=>{ if(el.classList.contains('show')) el.innerHTML=`<div class="cd-num" style="color:#2dc653">GO!</div>`; },2400); }); }
 
-  const isNewBest=score>bestScore;
-  if(isNewBest) bestScore=score;
-  savePersist();
-
-  document.getElementById('rScore').textContent=score;
-  document.getElementById('rBest').textContent=bestScore;
-  document.getElementById('rCaught').textContent=caught;
-  document.getElementById('rWave').textContent=wave;
-  document.getElementById('rCombo').textContent=maxCombo;
-  document.getElementById('rMisses').textContent=misses;
-  document.getElementById('newBestBanner').style.display=isNewBest?'block':'none';
-  document.getElementById('bestDisp').textContent=bestScore;
-  document.getElementById('totalDisp').textContent=totalCaught;
-
-  let medal='🥉',msg='Good try! Keep going!';
-  if(score>=2000){medal='🏆';msg='Clown Master! Incredible!';}
-  else if(score>=1000){medal='🥇';msg='Amazing performance!';}
-  else if(score>=500){medal='🥈';msg='Great catching skills!';}
-  document.getElementById('overMedal').textContent=medal;
-  document.getElementById('overMsg').textContent=msg;
-  showScreen('over');
-}
-
-function quitToMenu(){
-  running=false;paused=false;
-  clearArena();
-  document.getElementById('hud').classList.remove('show');
-  document.getElementById('bottomHud').classList.remove('show');
-  document.getElementById('arena').classList.remove('show');
-  document.getElementById('pauseBtn').classList.remove('show');
-  document.getElementById('pauseOverlay').classList.remove('show');
-  document.getElementById('zenTimer').style.display='none';
-  showScreen('menu');
-}
+async function startGame(){ if(running) quitToMenu(); let modeBtn=document.querySelector('.mode-btn.sel-mode'); if(modeBtn) gameMode=modeBtn.dataset.mode; let diffBtn=document.querySelector('.diff-pill.sel'); if(diffBtn) difficulty=diffBtn.dataset.d; let cfg=DIFF_CFG[difficulty]; score=0; lives=cfg.lives; wave=0; caught=0; misses=0; combo=0; maxCombo=0; power=0; bossActive=false; waveMisses=0; activePowerups={}; for(let i in puIntervals) clearInterval(puIntervals[i]); for(let i in puTimeouts) clearTimeout(puTimeouts[i]); document.getElementById('activePUs').innerHTML=''; running=false; paused=false; clearArena(); document.getElementById('hud').classList.add('show'); document.getElementById('bottomHud').classList.add('show'); document.getElementById('arena').classList.add('show'); document.getElementById('pauseBtn').classList.add('show'); document.getElementById('zenTimer').style.display='none'; updateHUD(); await countdown321(); running=true; if(gameMode==='zen') startZenWave(); else if(gameMode==='boss') startBossRush(); else { if(gameMode==='survival'){ survivalDrainInt=setInterval(()=>{ if(running&&!paused&&!bossActive){ loseLife(); showToast('⏳ Survival drain...'); } },25000); } nextWave(); } }
+function togglePause(){ if(!running) return; paused=!paused; document.getElementById('pauseOverlay').classList.toggle('show',paused); document.getElementById('pauseBtn').innerText=paused?'▶':'⏸'; }
+function gameOver(){ running=false; paused=false; clearArena(); document.getElementById('hud').classList.remove('show'); document.getElementById('bottomHud').classList.remove('show'); document.getElementById('arena').classList.remove('show'); document.getElementById('pauseBtn').classList.remove('show'); document.getElementById('pauseOverlay').classList.remove('show'); document.getElementById('zenTimer').style.display='none'; let newBest=score>bestScore; if(newBest) bestScore=score; savePersist(); document.getElementById('rScore').innerText=score; document.getElementById('rBest').innerText=bestScore; document.getElementById('rCaught').innerText=caught; document.getElementById('rWave').innerText=wave; document.getElementById('rCombo').innerText=maxCombo; document.getElementById('rMisses').innerText=misses; document.getElementById('newBestBanner').style.display=newBest?'block':'none'; let medal='🥉',msg='Nice try!'; if(score>=2000){medal='🏆';msg='Clown Master!';}else if(score>=1000){medal='🥇';msg='Incredible!';}else if(score>=500){medal='🥈';msg='Great!';} document.getElementById('overMedal').innerText=medal; document.getElementById('overMsg').innerText=msg; document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught; document.getElementById('overScreen').classList.add('active'); document.getElementById('menuScreen').classList.remove('active'); }
+function quitToMenu(){ running=false; paused=false; clearArena(); document.getElementById('hud').classList.remove('show'); document.getElementById('bottomHud').classList.remove('show'); document.getElementById('arena').classList.remove('show'); document.getElementById('pauseBtn').classList.remove('show'); document.getElementById('pauseOverlay').classList.remove('show'); document.getElementById('zenTimer').style.display='none'; document.getElementById('menuScreen').classList.add('active'); document.getElementById('overScreen').classList.remove('active'); }
 function restartSame(){ document.getElementById('pauseOverlay').classList.remove('show'); startGame(); }
-
-// keyboard shortcut
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&running) togglePause();
-  if(e.key==='f'&&power>=100&&running&&!paused) activateFrenzy();
-});
-
-// init displays
-document.getElementById('bestDisp').textContent=bestScore;
-document.getElementById('totalDisp').textContent=totalCaught;
-document.getElementById('lvlDisp').textContent=playerLevel;
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',function(){ document.querySelectorAll('.mode-btn').forEach(btn=>btn.classList.remove('sel-mode')); this.classList.add('sel-mode'); }));
+document.querySelectorAll('.diff-pill').forEach(b=>b.addEventListener('click',function(){ document.querySelectorAll('.diff-pill').forEach(d=>d.classList.remove('sel')); this.classList.add('sel'); }));
+document.getElementById('arena').addEventListener('click',arenaClick);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&running) togglePause(); if(e.key==='f'&&power>=100&&running&&!paused) activateFrenzy(); });
+window.addEventListener('resize',()=>{ let arena=document.getElementById('arena'); if(arena&&running){} }); // keep responsive
+updateHUD();
 </script>
 </body>
 </html>
