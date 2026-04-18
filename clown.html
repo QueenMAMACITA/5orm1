@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Booting...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: monospace;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#boot {
+    display: flex;
+    background: #000;
+    color: #00ff9c;
+    font-size: 22px;
+}
+
+#virus {
+    background: #111;
+    color: #ff2b2b;
+    font-size: 24px;
+}
+
+#chaos {
+    background: black;
+    color: white;
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 22px;
+    margin-top: 20px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.btn-red { background: #ff2b2b; color: #fff; }
+.btn-yellow { background: #ffd400; color: #000; }
+
+/* Progress */
+#barWrap {
+    width: 70%;
+    height: 14px;
+    background: #0a0a0a;
+    border: 1px solid #00ff9c;
+    margin: 20px auto 0;
+}
+#bar {
+    height: 100%;
+    width: 0%;
+    background: #00ff9c;
+}
+
+/* Chaos visuals */
+.shake {
+    animation: shake 0.15s infinite;
+}
+@keyframes shake {
+    0%{transform:translate(0,0)}
+    25%{transform:translate(6px,-6px)}
+    50%{transform:translate(-6px,6px)}
+    75%{transform:translate(6px,6px)}
+    100%{transform:translate(-6px,-6px)}
+}
+
+.clown {
+    position: absolute;
+    font-size: 42px;
+    pointer-events: none;
+    will-change: transform, left, top;
+}
+
+#jump {
+    position: absolute;
+    inset: 0;
+    display: none;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+#jump h1 {
+    font-size: 120px;
+    margin: 0;
+    color: #fff;
+}
+
+/* “camera-style” effect (no camera used) */
+.scan {
+    position:absolute;
+    inset:0;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.06),
+        rgba(255,255,255,0.06) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    pointer-events:none;
+}
+.vignette {
+    position:absolute;
+    inset:0;
+    box-shadow: inset 0 0 200px rgba(0,0,0,0.9);
+    pointer-events:none;
+}
+
+/* Floating text */
+.msg {
+    position: absolute;
+    font-weight: bold;
+    text-shadow: 0 0 8px #000;
+}
+
+/* Footer hint */
+#hint {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BOOT -->
+<div id="boot" class="screen">
+  <div>
+    Initializing modules...<br>
+    <div id="pct">0%</div>
+    <div id="barWrap"><div id="bar"></div></div>
+    <div style="margin-top:16px; opacity:.7;">(click anywhere to continue when ready)</div>
+  </div>
+</div>
+
+<!-- VIRUS -->
+<div id="virus" class="screen">
+  <div>
+    ⚠️ SYSTEM ALERT ⚠️<br><br>
+    Suspicious activity detected…<br>
+    <strong>Clown.exe</strong> has taken control 🤡<br><br>
+    <button class="btn btn-red" id="fixBtn">REMOVE THREAT</button>
+  </div>
+</div>
+
+<!-- CHAOS -->
+<div id="chaos" class="screen">
+  <div id="jump"><h1>🤡</h1></div>
+  <div class="scan"></div>
+  <div class="vignette"></div>
+  <div id="hint">Press ESC to calm things down</div>
+</div>
+
+<script>
+const boot = document.getElementById('boot');
+const virus = document.getElementById('virus');
+const chaos = document.getElementById('chaos');
+const pct = document.getElementById('pct');
+const bar = document.getElementById('bar');
+const fixBtn = document.getElementById('fixBtn');
+const jump = document.getElementById('jump');
+
+boot.style.display = 'flex';
+
+let p = 0;
+const load = setInterval(()=>{
+  p += Math.floor(Math.random()*8)+2;
+  if (p >= 100) {
+    p = 100;
+    clearInterval(load);
+    setTimeout(()=>{
+      boot.style.display = 'none';
+      virus.style.display = 'flex';
+    }, 500);
+  }
+  pct.textContent = p + '%';
+  bar.style.width = p + '%';
+}, 180);
+
+// ----- Audio (Web Audio API) -----
+let audioStarted = false;
+let ctx, master, lfo;
+
+// simple chaotic “circus” tone (no external files)
+function startAudio(){
+  if (audioStarted) return;
+  audioStarted = true;
+
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  master = ctx.createGain();
+  master.gain.value = 0.15;
+  master.connect(ctx.destination);
+
+  // three oscillators for a detuned, annoying “circus” vibe
+  const o1 = ctx.createOscillator();
+  const o2 = ctx.createOscillator();
+  const o3 = ctx.createOscillator();
+  o1.type = 'square';
+  o2.type = 'triangle';
+  o3.type = 'sawtooth';
+
+  o1.frequency.value = 440;
+  o2.frequency.value = 442;
+  o3.frequency.value = 220;
+
+  const g1 = ctx.createGain();
+  const g2 = ctx.createGain();
+  const g3 = ctx.createGain();
+  g1.gain.value = 0.2;
+  g2.gain.value = 0.15;
+  g3.gain.value = 0.1;
+
+  o1.connect(g1).connect(master);
+  o2.connect(g2).connect(master);
+  o3.connect(g3).connect(master);
+
+  // LFO to wobble pitch (chaotic)
+  lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  lfo.frequency.value = 6;
+  lfoGain.gain.value = 30;
+  lfo.connect(lfoGain);
+  lfoGain.connect(o1.frequency);
+  lfoGain.connect(o2.frequency);
+
+  o1.start(); o2.start(); o3.start(); lfo.start();
+
+  // random pitch jumps
+  setInterval(()=>{
+    o1.frequency.setValueAtTime(300 + Math.random()*400, ctx.currentTime);
+    o2.frequency.setValueAtTime(300 + Math.random()*400, ctx.currentTime);
+    o3.frequency.setValueAtTime(150 + Math.random()*250, ctx.currentTime);
+  }, 700);
+
+  // occasional “beep”
+  setInterval(()=>{
+    const b = ctx.createOscillator();
+    const g = ctx.createGain();
+    b.type = 'square';
+    b.frequency.value = 800 + Math.random()*600;
+    g.gain.value = 0.2;
+    b.connect(g).connect(master);
+    b.start();
+    setTimeout(()=>{ b.stop(); }, 120);
+  }, 900);
+}
+
+// ----- CHAOS -----
+function startChaos(){
+  virus.style.display = 'none';
+  chaos.style.display = 'flex';
+  document.body.classList.add('shake');
+
+  startAudio();
+
+  // flashing colors
+  const colors = ["#000","#200","#020","#002","#220","#202","#022","#111"];
+  window._flash = setInterval(()=>{
+    document.body.style.background = colors[Math.floor(Math.random()*colors.length)];
+  }, 90);
+
+  // spawn clowns
+  window._spawn = setInterval(()=>{
+    const d = document.createElement('div');
+    d.className = 'clown';
+    d.textContent = "🤡";
+    d.style.left = Math.random()*window.innerWidth + "px";
+    d.style.top = Math.random()*window.innerHeight + "px";
+    document.body.appendChild(d);
+
+    // drift
+    const dx = (Math.random()*4-2)*6;
+    const dy = (Math.random()*4-2)*6;
+    let x = parseFloat(d.style.left), y = parseFloat(d.style.top);
+    const move = setInterval(()=>{
+      x += dx; y += dy;
+      if (x < 0 || x > window.innerWidth) x = Math.random()*window.innerWidth;
+      if (y < 0 || y > window.innerHeight) y = Math.random()*window.innerHeight;
+      d.style.left = x + "px";
+      d.style.top = y + "px";
+    }, 40);
+
+    // cleanup
+    setTimeout(()=>{
+      clearInterval(move);
+      d.remove();
+    }, 8000);
+  }, 120);
+
+  // floating messages
+  const texts = ["HAHA 🤡","YOU CLICKED 🤡","NO ESCAPE 🤡","WHY ARE YOU HERE 🤡","CLOWN ZONE 🤡"];
+  window._msg = setInterval(()=>{
+    const m = document.createElement('div');
+    m.className = 'msg';
+    m.textContent = texts[Math.floor(Math.random()*texts.length)];
+    m.style.left = Math.random()*window.innerWidth + "px";
+    m.style.top = Math.random()*window.innerHeight + "px";
+    m.style.fontSize = (18 + Math.random()*28) + "px";
+    m.style.color = ["#fff","#ff0","#0ff","#f0f","#f55"][Math.floor(Math.random()*5)];
+    document.body.appendChild(m);
+    setTimeout(()=>m.remove(), 3000);
+  }, 200);
+
+  // title chaos
+  window._title = setInterval(()=>{
+    document.title = "🤡 HAHAHA 🤡";
+  }, 250);
+
+  // occasional jump scare (very brief)
+  window._jump = setInterval(()=>{
+    jump.style.display = 'flex';
+    setTimeout(()=> jump.style.display = 'none', 220);
+  }, 5000);
+}
+
+// calm down (ESC)
+function stopChaos(){
+  document.body.classList.remove('shake');
+  document.body.style.background = "#000";
+  document.title = "Okay okay 😅";
+
+  clearInterval(window._flash);
+  clearInterval(window._spawn);
+  clearInterval(window._msg);
+  clearInterval(window._title);
+  clearInterval(window._jump);
+
+  // fade audio
+  if (master && ctx){
+    const now = ctx.currentTime;
+    master.gain.cancelScheduledValues(now);
+    master.gain.setTargetAtTime(0.0, now, 0.3);
+  }
+}
+
+fixBtn.addEventListener('click', startChaos);
+
+// start audio on first user interaction (browser requirement)
+window.addEventListener('click', ()=> startAudio(), { once: true });
+
+// ESC to stop
+window.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape') stopChaos();
+});
+</script>
+</body>
+</html>
