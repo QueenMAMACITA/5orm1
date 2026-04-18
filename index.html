@@ -2,517 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>System Booting...</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incoming Call</title>
+
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
-#app {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: #0a0a0a;
-  font-family: 'Courier New', monospace;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+body {
+    margin: 0;
+    font-family: Arial;
+    background: black;
+    color: white;
+    overflow: hidden;
 }
+
+/* call screen */
 .screen {
-  display: none;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+    text-align: center;
 }
-.screen.active { display: flex; }
 
-/* BOOT SCREEN */
-#s-boot { background: #0a0a0a; color: #00ff9c; gap: 20px; padding: 40px; }
-#s-boot h2 { font-size: 13px; letter-spacing: 3px; color: #00cc7a; font-weight: 400; }
-#s-boot .title { font-size: 28px; font-weight: 400; letter-spacing: 2px; }
-#boot-log {
-  font-size: 12px;
-  color: #00cc7a;
-  opacity: 0.7;
-  text-align: left;
-  width: 340px;
-  height: 80px;
-  overflow: hidden;
+/* caller */
+.name {
+    font-size: 28px;
+    margin-top: 40px;
 }
-#boot-log div { padding: 1px 0; }
-.bar-track { width: 340px; height: 6px; background: #111; border: 1px solid #00ff9c44; border-radius: 3px; }
-.bar-fill { height: 100%; width: 0%; background: #00ff9c; border-radius: 3px; transition: width 0.15s; }
-.pct-label { font-size: 13px; color: #00cc7a; letter-spacing: 1px; }
 
-/* ALERT SCREEN */
-#s-alert { background: #0f0a0a; color: #fff; gap: 24px; padding: 40px; text-align: center; }
-.alert-badge {
-  background: #ff2b2b11;
-  border: 1px solid #ff2b2b44;
-  border-radius: 12px;
-  padding: 28px 36px;
-  max-width: 400px;
+.status {
+    opacity: 0.7;
+    margin-top: 10px;
 }
-.alert-icon { font-size: 40px; margin-bottom: 12px; }
-.alert-title { font-size: 22px; color: #ff4444; margin-bottom: 8px; font-weight: 400; letter-spacing: 1px; }
-.alert-sub { font-size: 14px; color: #ff888888; margin-bottom: 4px; }
-.alert-name { font-size: 16px; color: #ffaaaa; margin-bottom: 12px; font-weight: 400; }
-.alert-desc { font-size: 13px; color: #ff666655; margin-bottom: 22px; line-height: 1.6; }
-.choices { display: flex; gap: 12px; justify-content: center; }
+
+/* avatar circle */
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #222;
+    margin-top: 30px;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* buttons */
+.buttons {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
 .btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  cursor: pointer;
-  font-weight: 400;
-  transition: transform 0.1s, opacity 0.1s;
-  letter-spacing: 1px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
 }
-.btn:hover { transform: scale(1.04); opacity: 0.9; }
-.btn:active { transform: scale(0.96); }
-.btn-danger { background: #ff2b2b; color: #fff; }
-.btn-safe { background: #1a2a1a; color: #44ff77; border: 1px solid #44ff7744; }
-.hint-text { font-size: 11px; color: #ffffff22; margin-top: 10px; }
 
-/* SAFE SCREEN */
-#s-safe { background: #0a0f0a; color: #44ff77; gap: 16px; padding: 40px; text-align: center; }
-#s-safe .big { font-size: 56px; }
-#s-safe .safe-title { font-size: 20px; letter-spacing: 2px; }
-#s-safe p { font-size: 14px; color: #44ff7777; }
+.accept {
+    background: green;
+}
 
-/* CHAOS SCREEN */
-#s-chaos { background: #000; overflow: hidden; }
-.clown-el { position: absolute; pointer-events: none; }
-.msg-el {
-  position: absolute;
-  pointer-events: none;
-  font-weight: 400;
-  text-shadow: 0 0 6px #000a;
-  font-family: 'Courier New', monospace;
-}
-.scan-lines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.04) 0px,
-    rgba(255,255,255,0.04) 1px,
-    transparent 1px,
-    transparent 5px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-#chaos-hud {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-}
-.hud-stat { text-align: center; }
-.hud-label { font-size: 10px; color: #ffffff44; letter-spacing: 2px; display: block; }
-.hud-val { font-size: 20px; color: #fff; }
-#escape-bar-wrap { width: 200px; }
-.escape-label { font-size: 10px; color: #ffffff55; text-align: center; margin-bottom: 4px; letter-spacing: 2px; }
-.escape-track { height: 8px; background: #ffffff11; border: 1px solid #ffffff22; border-radius: 4px; }
-.escape-fill { height: 100%; width: 0%; background: #44ff77; border-radius: 4px; transition: width 0.05s linear; }
-#calm-btn {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #44ff7722;
-  border: 1px solid #44ff7744;
-  color: #44ff77;
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  cursor: pointer;
-  letter-spacing: 2px;
-  transition: background 0.2s;
-  z-index: 10;
-  user-select: none;
-}
-#calm-btn:hover { background: #44ff7733; }
-#calm-btn.active { background: #44ff77; color: #000; }
-#jumpscare {
-  position: absolute;
-  inset: 0;
-  background: #000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  font-size: 120px;
-}
-#score-banner {
-  position: absolute;
-  bottom: 72px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: #ffffff22;
-  letter-spacing: 2px;
-  z-index: 10;
-  white-space: nowrap;
+.decline {
+    background: red;
 }
 </style>
 </head>
+
 <body>
-<div id="app">
 
-  <!-- BOOT SCREEN -->
-  <div id="s-boot" class="screen active">
-    <div style="text-align:center">
-      <h2>SYSTEM v3.14</h2>
-      <div class="title">[ BOOT SEQUENCE ]</div>
+<div class="screen">
+    <div>
+        <div class="name" id="caller">Unknown Caller</div>
+        <div class="status" id="status">Incoming call...</div>
     </div>
-    <div id="boot-log"></div>
-    <div style="width:340px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <span style="font-size:11px;color:#00cc7a55;letter-spacing:2px">LOADING</span>
-        <span class="pct-label" id="pct-txt">0%</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" id="boot-bar"></div></div>
+
+    <div class="avatar"></div>
+
+    <div class="buttons">
+        <div class="btn decline" onclick="decline()">✖</div>
+        <div class="btn accept" onclick="accept()">✔</div>
     </div>
-    <div style="font-size:11px;color:#00ff9c33;letter-spacing:1px">initializing core modules...</div>
-  </div>
-
-  <!-- ALERT SCREEN -->
-  <div id="s-alert" class="screen">
-    <div class="alert-badge">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-title">SYSTEM ALERT</div>
-      <div class="alert-sub">Malicious process detected</div>
-      <div class="alert-name">clown.exe</div>
-      <div class="alert-desc">
-        This process has infiltrated your system.<br>
-        It may cause instability, visual disturbances,<br>
-        and unexpected clown activity.
-      </div>
-      <div class="choices">
-        <button class="btn btn-safe" id="btn-safe">QUARANTINE</button>
-        <button class="btn btn-danger" id="btn-chaos">ALLOW ACCESS</button>
-      </div>
-      <div class="hint-text">choose wisely</div>
-    </div>
-  </div>
-
-  <!-- SAFE SCREEN -->
-  <div id="s-safe" class="screen">
-    <div class="big">✓</div>
-    <div class="safe-title">THREAT NEUTRALIZED</div>
-    <p>System secure. No clowns detected.</p>
-    <button class="btn btn-safe" id="btn-restart" style="margin-top:24px">RESTART SYSTEM</button>
-  </div>
-
-  <!-- CHAOS SCREEN -->
-  <div id="s-chaos" class="screen">
-    <div class="scan-lines"></div>
-    <div id="jumpscare">🤡</div>
-    <div id="chaos-hud">
-      <div class="hud-stat">
-        <span class="hud-label">CLOWNS</span>
-        <span class="hud-val" id="clown-count">0</span>
-      </div>
-      <div id="escape-bar-wrap">
-        <div class="escape-label">HOLD TO CALM</div>
-        <div class="escape-track"><div class="escape-fill" id="escape-fill"></div></div>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">CHAOS LV</span>
-        <span class="hud-val" id="chaos-lvl">1</span>
-      </div>
-    </div>
-    <button id="calm-btn">HOLD ESC TO CALM</button>
-    <div id="score-banner">press and hold ESC — or hold the button — to restore order</div>
-  </div>
-
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const screens = { boot: $('s-boot'), alert: $('s-alert'), safe: $('s-safe'), chaos: $('s-chaos') };
+let callerNames = ["Mom 📱", "Unknown Number", "Best Friend 😂", "System Alert", "Private Caller"];
 
-function show(name) {
-  Object.values(screens).forEach(s => s.classList.remove('active'));
-  screens[name].classList.add('active');
-}
+let status = document.getElementById("status");
+let caller = document.getElementById("caller");
 
-// ----- BOOT SEQUENCE -----
-const logs = [
-  'loading kernel...',
-  'init memory banks...',
-  'mounting filesystems...',
-  'starting network daemon...',
-  'loading audio drivers...',
-  'checking process integrity...',
-  'scanning active processes...',
-  '!! anomaly detected in /proc/clown !!',
-  'attempting to contain...',
-  'containment failed',
-  'WARNING: clown.exe is active'
-];
+// random caller
+caller.innerText = callerNames[Math.floor(Math.random() * callerNames.length)];
 
-function runBoot() {
-  let pct = 0, logIndex = 0;
-  const logEl = $('boot-log');
-  const barEl = $('boot-bar');
-  logEl.innerHTML = '';
-  $('pct-txt').textContent = '0%';
-  barEl.style.width = '0%';
-
-  const bootInt = setInterval(() => {
-    pct += Math.floor(Math.random() * 7) + 2;
-    if (pct >= 100) {
-      pct = 100;
-      clearInterval(bootInt);
-      setTimeout(() => show('alert'), 600);
-    }
-    $('pct-txt').textContent = pct + '%';
-    barEl.style.width = pct + '%';
-    if (logIndex < logs.length) {
-      const d = document.createElement('div');
-      d.textContent = '> ' + logs[logIndex++];
-      if (logIndex > logs.length - 3) d.style.color = '#ff4444';
-      logEl.appendChild(d);
-      logEl.scrollTop = logEl.scrollHeight;
-    }
-  }, 200);
-}
-
-runBoot();
-
-// ----- BUTTONS -----
-$('btn-safe').addEventListener('click', () => show('safe'));
-$('btn-restart').addEventListener('click', () => { show('boot'); runBoot(); });
-$('btn-chaos').addEventListener('click', startChaos);
-
-// ----- AUDIO -----
-let audioCtx = null, masterGain = null;
-
-function startAudio() {
-  if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0.12;
-  masterGain.connect(audioCtx.destination);
-
-  const osc1 = audioCtx.createOscillator();
-  const osc2 = audioCtx.createOscillator();
-  osc1.type = 'square';
-  osc2.type = 'sawtooth';
-  osc1.frequency.value = 440;
-  osc2.frequency.value = 220;
-
-  const g1 = audioCtx.createGain();
-  const g2 = audioCtx.createGain();
-  g1.gain.value = 0.2;
-  g2.gain.value = 0.1;
-
-  osc1.connect(g1).connect(masterGain);
-  osc2.connect(g2).connect(masterGain);
-
-  const lfo = audioCtx.createOscillator();
-  const lfoG = audioCtx.createGain();
-  lfo.frequency.value = 7;
-  lfoG.gain.value = 40;
-  lfo.connect(lfoG);
-  lfoG.connect(osc1.frequency);
-
-  osc1.start(); osc2.start(); lfo.start();
-
-  setInterval(() => {
-    if (!chaosActive) return;
-    osc1.frequency.setValueAtTime(300 + Math.random() * 400, audioCtx.currentTime);
-    osc2.frequency.setValueAtTime(150 + Math.random() * 200, audioCtx.currentTime);
-  }, 600);
-
-  // occasional beeps
-  setInterval(() => {
-    if (!chaosActive) return;
-    const b = audioCtx.createOscillator();
-    const bg = audioCtx.createGain();
-    b.type = 'square';
-    b.frequency.value = 800 + Math.random() * 600;
-    bg.gain.value = 0.15;
-    b.connect(bg).connect(masterGain);
-    b.start();
-    setTimeout(() => b.stop(), 100);
-  }, 900);
-}
-
-// ----- CHAOS -----
-let chaosActive = false;
-let spawnInt, flashInt, msgInt, jumpInt, levelInt;
-let chaosLevel = 1, clownCount = 0;
-let escHeld = false, escFill = 0, escDecayTimer = null, escInterval = null;
-
-const bgColors = ['#000', '#0a0000', '#00000a', '#0a0a00', '#050005', '#000505'];
-let bgIdx = 0;
-
-const chaosContainer = $('s-chaos');
-
-function spawnClown() {
-  const el = document.createElement('div');
-  el.className = 'clown-el';
-  el.textContent = '🤡';
-  const size = 28 + Math.random() * 36;
-  el.style.fontSize = size + 'px';
-  let x = Math.random() * (chaosContainer.offsetWidth - size * 1.5);
-  let y = Math.random() * (chaosContainer.offsetHeight - size * 1.5);
-  el.style.left = x + 'px';
-  el.style.top = y + 'px';
-  chaosContainer.appendChild(el);
-  clownCount++;
-  $('clown-count').textContent = clownCount;
-
-  const speed = chaosLevel * 1.5;
-  let vx = (Math.random() - 0.5) * speed * 2;
-  let vy = (Math.random() - 0.5) * speed * 2;
-  let alive = true;
-
-  const move = setInterval(() => {
-    if (!alive) return;
-    x += vx; y += vy;
-    if (x < 0 || x > chaosContainer.offsetWidth - size) { vx *= -1; x = Math.max(0, Math.min(x, chaosContainer.offsetWidth - size)); }
-    if (y < 0 || y > chaosContainer.offsetHeight - size) { vy *= -1; y = Math.max(0, Math.min(y, chaosContainer.offsetHeight - size)); }
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
-  }, 40);
-
-  setTimeout(() => {
-    alive = false;
-    clearInterval(move);
-    el.remove();
-    clownCount = Math.max(0, clownCount - 1);
-    $('clown-count').textContent = clownCount;
-  }, 6000);
-}
-
-function spawnMsg() {
-  const msgs = ['HAHA', 'NO ESCAPE', 'CLOWN ZONE', 'WHY?', 'CHAOS REIGNS', 'YOU DID THIS', 'HAHAHA', 'TOO LATE'];
-  const colors = ['#fff', '#ff0', '#f0f', '#0ff', '#f55', '#fa0'];
-  const el = document.createElement('div');
-  el.className = 'msg-el';
-  el.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-  el.style.left = Math.random() * (chaosContainer.offsetWidth - 140) + 'px';
-  el.style.top = Math.random() * (chaosContainer.offsetHeight - 50) + 'px';
-  el.style.fontSize = (14 + Math.random() * 22) + 'px';
-  el.style.color = colors[Math.floor(Math.random() * colors.length)];
-  el.style.opacity = '1';
-  el.style.zIndex = '2';
-  chaosContainer.appendChild(el);
-
-  let op = 1;
-  const fade = setInterval(() => {
-    op -= 0.02;
-    el.style.opacity = op;
-    if (op <= 0) { clearInterval(fade); el.remove(); }
-  }, 60);
-}
-
-function startChaos() {
-  chaosActive = true;
-  chaosLevel = 1;
-  clownCount = 0;
-  $('clown-count').textContent = '0';
-  $('chaos-lvl').textContent = '1';
-  show('chaos');
-  startAudio();
-
-  spawnInt = setInterval(() => { if (chaosActive) spawnClown(); }, 150);
-  flashInt = setInterval(() => {
-    if (!chaosActive) return;
-    bgIdx = (bgIdx + 1) % bgColors.length;
-    chaosContainer.style.background = bgColors[bgIdx];
-  }, 120);
-  msgInt = setInterval(() => { if (chaosActive) spawnMsg(); }, 280);
-  jumpInt = setInterval(() => {
-    if (!chaosActive) return;
-    $('jumpscare').style.display = 'flex';
-    setTimeout(() => $('jumpscare').style.display = 'none', 200);
-  }, 6000);
-  levelInt = setInterval(() => {
-    if (!chaosActive) return;
-    chaosLevel = Math.min(10, chaosLevel + 1);
-    $('chaos-lvl').textContent = chaosLevel;
-  }, 5000);
-}
-
-function stopChaos() {
-  chaosActive = false;
-  clearInterval(spawnInt);
-  clearInterval(flashInt);
-  clearInterval(msgInt);
-  clearInterval(jumpInt);
-  clearInterval(levelInt);
-  clearInterval(escInterval);
-  clearInterval(escDecayTimer);
-  escHeld = false;
-  escFill = 0;
-  $('escape-fill').style.width = '0%';
-  $('calm-btn').classList.remove('active');
-  chaosContainer.querySelectorAll('.clown-el, .msg-el').forEach(e => e.remove());
-  chaosContainer.style.background = '#000';
-  clownCount = 0;
-
-  if (masterGain && audioCtx) {
-    masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4);
+function accept() {
+    status.innerText = "Connecting...";
+    
     setTimeout(() => {
-      if (audioCtx) { audioCtx.close(); audioCtx = null; masterGain = null; }
+        alert("📞 Call connected... (just a prank 😄)");
+        status.innerText = "Call ended";
     }, 2000);
-  }
-
-  show('safe');
 }
 
-// ----- ESC / CALM BUTTON -----
-const calmBtn = $('calm-btn');
-const escapeFillEl = $('escape-fill');
-
-function startEsc() {
-  if (!chaosActive || escHeld) return;
-  escHeld = true;
-  calmBtn.classList.add('active');
-  clearInterval(escDecayTimer);
-  escInterval = setInterval(() => {
-    escFill = Math.min(100, escFill + 2);
-    escapeFillEl.style.width = escFill + '%';
-    if (escFill >= 100) { clearInterval(escInterval); escFill = 0; stopChaos(); }
-  }, 50);
+function decline() {
+    status.innerText = "Call declined";
 }
 
-function stopEsc() {
-  if (!escHeld) return;
-  escHeld = false;
-  calmBtn.classList.remove('active');
-  clearInterval(escInterval);
-  escDecayTimer = setInterval(() => {
-    if (escHeld) { clearInterval(escDecayTimer); return; }
-    escFill = Math.max(0, escFill - 3);
-    escapeFillEl.style.width = escFill + '%';
-    if (escFill <= 0) clearInterval(escDecayTimer);
-  }, 50);
-}
-
-calmBtn.addEventListener('mousedown', startEsc);
-calmBtn.addEventListener('touchstart', e => { e.preventDefault(); startEsc(); });
-document.addEventListener('mouseup', stopEsc);
-document.addEventListener('touchend', stopEsc);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); startEsc(); } });
-document.addEventListener('keyup', e => { if (e.key === 'Escape') stopEsc(); });
+// fake ringing vibration effect (visual only)
+setInterval(() => {
+    document.body.style.background = 
+        document.body.style.background === "black" ? "#111" : "black";
+}, 800);
 </script>
+
 </body>
 </html>
