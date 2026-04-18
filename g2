@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Focus Test</title>
+
+<style>
+body {
+    margin:0;
+    background:#111;
+    color:#0f0;
+    font-family: monospace;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+#box {
+    text-align:center;
+    max-width:600px;
+}
+
+input {
+    padding:10px;
+    margin-top:20px;
+    width:300px;
+    background:black;
+    border:1px solid #0f0;
+    color:#0f0;
+}
+
+.fade {
+    animation: fade 1s;
+}
+
+@keyframes fade {
+    from { opacity:0; }
+    to { opacity:1; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="box">
+    <h2>Focus Test v1.3</h2>
+    <p id="text">Type anything to begin...</p>
+    <input id="input" autofocus />
+</div>
+
+<script>
+const text = document.getElementById("text");
+const input = document.getElementById("input");
+
+let stage = 0;
+
+input.addEventListener("input", (e) => {
+    const value = e.target.value;
+
+    if(stage === 0 && value.length > 3){
+        stage++;
+        text.innerText = "Good. Keep typing.";
+    }
+
+    if(stage === 1 && value.length > 8){
+        stage++;
+        text.innerText = "You're typing faster now.";
+    }
+
+    if(stage === 2 && value.length > 12){
+        stage++;
+        text.innerText = "You hesitated before that last word.";
+    }
+
+    if(stage === 3 && value.length > 18){
+        stage++;
+        text.innerText = "Don't worry, I'm just observing 🙂";
+    }
+
+    if(stage === 4 && value.length > 22){
+        stage++;
+        text.innerText = "Try moving your mouse.";
+    }
+});
+
+// track mouse
+let moved = false;
+document.addEventListener("mousemove", () => {
+    if(stage === 5 && !moved){
+        moved = true;
+        text.innerText = "Yeah… I can see that too.";
+        nextStage();
+    }
+});
+
+function nextStage(){
+    stage++;
+
+    setTimeout(()=>{
+        text.innerText = "Switch tabs for a second.";
+    },2000);
+
+    document.addEventListener("visibilitychange", () => {
+        if(document.hidden && stage === 6){
+            stage++;
+        }
+        if(!document.hidden && stage === 7){
+            text.innerText = "Welcome back.";
+            finalBuild();
+        }
+    });
+}
+
+function finalBuild(){
+    setTimeout(()=>{
+        text.innerText = "You're wondering how this works.";
+    },2000);
+
+    setTimeout(()=>{
+        text.innerText = "It's not tracking you.";
+    },4000);
+
+    setTimeout(()=>{
+        text.innerText = "It's just reacting.";
+    },6000);
+
+    setTimeout(()=>{
+        text.innerText = "But this part is intentional...";
+    },8000);
+
+    setTimeout(()=>{
+        document.body.innerHTML = `
+            <div style="text-align:center;">
+                <h1 style="color:white;">😄 Got you</h1>
+                <p style="color:#0f0;">Even developers overthink sometimes</p>
+                <h2 style="color:white;">I love you ❤️</h2>
+            </div>
+        `;
+    },10000);
+}
+</script>
+
+</body>
+</html>
