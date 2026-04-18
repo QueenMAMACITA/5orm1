@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>🤡 Clown Catcher DELUXE</title>
+<title>🤡 Clown Catcher DELUXE - Music & Modes</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -16,14 +16,9 @@
 html,body{height:100%;overflow:hidden;background:var(--dark); touch-action: manipulation;}
 body{font-family:'Nunito',sans-serif;}
 
-/* Canvas BG */
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-
-/* Screens */
 .screen{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center; padding:16px;}
 .screen.active{display:flex}
-
-/* Menu Card */
 .menu-card{
   background:linear-gradient(145deg,#1e1040,#2a1860);
   border:2px solid #4a2a8a;border-radius:32px;
@@ -52,7 +47,8 @@ body{font-family:'Nunito',sans-serif;}
 
 .big-play-btn{width:100%;padding:16px;border-radius:20px;border:none;font-family:'Fredoka One',cursive;font-size:24px;cursor:pointer;background:linear-gradient(135deg,var(--orange),var(--red));color:#fff;box-shadow:0 6px 0 #aa2020;margin-bottom:14px}
 .big-play-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #aa2020}
-.score-bar{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--gray)}
+.score-bar{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--gray); align-items:center;}
+.music-toggle{background:#2a1860; border:1px solid var(--purple2); border-radius:40px; padding:5px 12px; font-size:12px; cursor:pointer; color:white;}
 
 /* HUD */
 #hud{position:fixed;top:0;left:0;right:0;z-index:30;display:none;padding:8px 16px;background:linear-gradient(to bottom,#0d0a1aee,transparent);align-items:center;justify-content:space-between;pointer-events:none}
@@ -78,37 +74,26 @@ body{font-family:'Nunito',sans-serif;}
 .pu-active{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
 .pu-pill{background:#ffffff18;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:900;color:#fff;white-space:nowrap}
 
-/* Arena */
 #arena{position:fixed;inset:0;z-index:20;overflow:hidden;cursor:crosshair;display:none;touch-action:manipulation}
 #arena.show{display:block}
-
-/* Clowns */
 .clown{position:absolute;cursor:pointer;text-align:center;transition:transform 0.08s;animation:bounceIn 0.2s cubic-bezier(.36,.07,.19,.97) both;touch-action:manipulation}
-@keyframes bounceIn{0%{transform:scale(0) rotate(-20deg)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
 .clown:active{transform:scale(0.85)!important}
 .c-emoji{font-size:42px;line-height:1;filter:drop-shadow(0 4px 6px #0008)}
 .c-hp-wrap{width:42px;height:5px;background:#ffffff22;border-radius:3px;margin:4px auto 0}
 .c-hp{height:100%;border-radius:3px;background:linear-gradient(90deg,#ff3860,#ff6b35)}
 .clown.bomb .c-emoji{filter:drop-shadow(0 4px 6px #ff000080)}
 .clown.golden .c-emoji{filter:drop-shadow(0 0 12px #ffd60a)}
-.clown.frozen{filter:hue-rotate(160deg) brightness(0.8)}
-
-/* Boss */
 .boss-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);text-align:center;z-index:22;width:90%;max-width:360px}
 .boss-emoji{font-size:90px;animation:bossBob 1s ease-in-out infinite}
-@keyframes bossBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .boss-hp-wrap{height:12px;background:#ffffff22;border-radius:7px;margin:8px auto 0}
 .boss-hp{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--orange))}
 .boss-name{font-family:'Fredoka One',cursive;font-size:20px;color:var(--red)}
 
-/* Particles & Toasts */
 .particle{position:absolute;pointer-events:none;z-index:50;animation:poof 0.7s forwards}
 @keyframes poof{0%{transform:scale(0.5);opacity:1}100%{transform:scale(2) translateY(-80px);opacity:0}}
 .score-pop{position:absolute;pointer-events:none;z-index:50;font-family:'Fredoka One',cursive;font-size:20px;animation:scoreFloat 0.9s forwards}
 @keyframes scoreFloat{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-70px);opacity:0}}
 #toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:60;background:var(--yellow);color:#1a0a00;border-radius:30px;padding:8px 24px;font-family:'Fredoka One',cursive;font-size:18px;display:none;white-space:nowrap;box-shadow:0 4px 20px #ffd60a80}
-
-/* Pause & Game Over */
 #pauseOverlay{position:fixed;inset:0;z-index:80;background:#0009;display:none;align-items:center;justify-content:center}
 #pauseOverlay.show{display:flex}
 .pause-card{background:linear-gradient(145deg,#1e1040,#2a1860);border-radius:28px;padding:24px 32px;text-align:center;width:80%;max-width:300px}
@@ -116,7 +101,6 @@ body{font-family:'Nunito',sans-serif;}
 .pause-btn{width:100%;padding:12px;border-radius:16px;margin-bottom:10px;font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer}
 .pb-resume{background:var(--green);color:#fff}
 .pb-quit{background:#3a2a6a;color:var(--gray)}
-
 #overScreen{background:linear-gradient(135deg,#0d0a1a,#1a0a30)}
 .over-card{background:linear-gradient(145deg,#1e1040,#2a1860);border-radius:32px;padding:24px 20px;width:90%;max-width:380px}
 .over-medal{font-size:70px}
@@ -128,7 +112,6 @@ body{font-family:'Nunito',sans-serif;}
 .ob{padding:12px 20px;border-radius:16px;font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer}
 .ob-retry{background:linear-gradient(135deg,var(--orange),var(--red));color:#fff}
 .ob-menu{background:#2a1860;color:var(--gray)}
-
 #zenTimer{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:31;font-family:'Fredoka One',cursive;font-size:44px;color:var(--green);display:none;text-shadow:0 0 20px #2dc65380}
 #countdown{position:fixed;inset:0;z-index:90;background:#0009;display:none;align-items:center;justify-content:center}
 #countdown.show{display:flex}
@@ -137,45 +120,24 @@ body{font-family:'Nunito',sans-serif;}
 #pauseBtn.show{display:block}
 #achieveToast{position:fixed;bottom:70px;right:10px;z-index:70;background:linear-gradient(135deg,#2a1860,#1e1040);border:2px solid var(--yellow);border-radius:20px;padding:10px 14px;display:none;flex-direction:column;max-width:200px}
 #achOverlay .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:60vh;overflow-y:auto}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .menu-card{padding:18px 16px}
-  .game-title{font-size:32px}
-  .mode-btn{font-size:13px;padding:8px 4px}
-  .mode-icon{font-size:20px}
-  .diff-pill{padding:4px 12px;font-size:11px}
-  .big-play-btn{font-size:20px;padding:12px}
-  .hud-val{font-size:20px}
-  .wave-badge{font-size:11px}
-  .c-emoji{font-size:36px}
-  .boss-emoji{font-size:70px}
-  .boss-name{font-size:16px}
-  #bottomHud{gap:6px}
-  .bar-group{min-width:90px}
-  #frenzyBtn{font-size:12px;padding:4px 10px}
-  .pu-pill{font-size:9px}
-  .cd-num{font-size:100px}
-  #zenTimer{font-size:36px;top:60px}
-}
+@media (max-width: 600px){ .menu-card{padding:18px 16px} .game-title{font-size:32px} .mode-btn{font-size:13px;padding:8px 4px} .mode-icon{font-size:20px} .diff-pill{padding:4px 12px;font-size:11px} .big-play-btn{font-size:20px;padding:12px} .hud-val{font-size:20px} .wave-badge{font-size:11px} .c-emoji{font-size:36px} .boss-emoji{font-size:70px} #bottomHud{gap:6px} .bar-group{min-width:90px} #frenzyBtn{font-size:12px;padding:4px 10px} .cd-num{font-size:100px} }
 </style>
 </head>
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
-<!-- MENU -->
 <div id="menuScreen" class="screen active">
   <div class="menu-card">
     <div class="game-logo">🤡</div>
     <div class="game-title">CLOWN CATCHER</div>
     <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--orange)">DELUXE</div>
     <div class="game-tagline">Tap fast. Dodge bombs. Catch 'em all!</div>
-    <div class="mode-grid">
-      <button class="mode-btn classic sel-mode" data-mode="classic"><span class="mode-icon">🎮</span>Classic<span class="mode-sub">Waves & Bosses</span></button>
-      <button class="mode-btn survival" data-mode="survival"><span class="mode-icon">⚡</span>Survival<span class="mode-sub">Endless + drain</span></button>
-      <button class="mode-btn zen" data-mode="zen"><span class="mode-icon">🌈</span>Zen<span class="mode-sub">60s no bomb</span></button>
-      <button class="mode-btn boss" data-mode="boss"><span class="mode-icon">👹</span>Boss Rush<span class="mode-sub">Pure bosses</span></button>
+    <div class="mode-grid" id="modeGrid">
+      <button class="mode-btn classic sel-mode" data-mode="classic"><span class="mode-icon">🎮</span>Classic<span class="mode-sub">Waves + Bosses</span></button>
+      <button class="mode-btn survival" data-mode="survival"><span class="mode-icon">⚡</span>Survival<span class="mode-sub">Life drain every 25s</span></button>
+      <button class="mode-btn zen" data-mode="zen"><span class="mode-icon">🌈</span>Zen<span class="mode-sub">60s no bombs</span></button>
+      <button class="mode-btn boss" data-mode="boss"><span class="mode-icon">👹</span>Boss Rush<span class="mode-sub">Endless bosses</span></button>
     </div>
     <div class="diff-row">
       <button class="diff-pill sel" data-d="easy">😊 Easy</button>
@@ -183,18 +145,19 @@ body{font-family:'Nunito',sans-serif;}
       <button class="diff-pill" data-d="hard">💀 Hard</button>
       <button class="diff-pill" data-d="insane">🔥 Insane</button>
     </div>
+    <div style="display:flex; gap:12px; justify-content:center; margin-bottom:12px;">
+      <button id="musicToggleBtn" class="music-toggle">🔴 MUSIC OFF</button>
+    </div>
     <button class="big-play-btn" onclick="startGame()">🎪 PLAY!</button>
     <div class="score-bar"><span>🏆 Best: <span id="bestDisp">0</span></span><button onclick="showAchievements()" style="background:none;border:none;color:var(--gray);font-weight:900;cursor:pointer">🏆 Achievements</button><span>🤡 Total: <span id="totalDisp">0</span></span></div>
   </div>
 </div>
 
-<!-- HUDs -->
 <div id="hud"><div class="hud-block"><div class="hud-val" id="hScore">0</div><div class="hud-lbl">SCORE</div></div><div class="hud-center"><div class="wave-badge" id="waveBadge">WAVE 1</div><div class="combo-badge" id="comboBadge">x2 COMBO!</div></div><div class="hud-block"><div class="lives-row" id="livesRow">❤️❤️❤️</div><div class="hud-lbl">LIVES</div></div></div>
 <button id="pauseBtn" onclick="togglePause()">⏸</button>
 <div id="zenTimer">60</div>
 <div id="arena"></div>
 <div id="bottomHud"><div class="bar-group"><div class="bar-lbl">⚡ POWER</div><div class="bar-track"><div class="bar-fill power-fill" id="powerBar" style="width:0%"></div></div></div><div><button id="frenzyBtn" onclick="activateFrenzy()">⚡ FRENZY!</button><div id="activePUs" class="pu-active"></div></div><div class="bar-group"><div class="bar-lbl">XP LVL <span id="lvlDisp">1</span></div><div class="bar-track"><div class="bar-fill xp-fill" id="xpBar" style="width:0%"></div></div></div></div>
-
 <div id="toast"></div>
 <div id="pauseOverlay"><div class="pause-card"><div class="pause-title">PAUSED</div><button class="pause-btn pb-resume" onclick="togglePause()">▶ RESUME</button><button class="pause-btn" style="background:#2a1860;color:var(--blue)" onclick="restartSame()">↺ RESTART</button><button class="pause-btn pb-quit" onclick="quitToMenu()">🏠 MENU</button></div></div>
 <div id="achieveToast"><div class="ach-title">🏆 Unlocked!</div><div class="ach-name" id="achName"></div><div class="ach-desc" id="achDesc"></div></div>
@@ -203,6 +166,21 @@ body{font-family:'Nunito',sans-serif;}
 <div id="overScreen" class="screen"><div class="over-card"><div class="over-medal" id="overMedal">🥇</div><div class="over-title">GAME OVER!</div><div class="over-msg" id="overMsg"></div><div class="new-best" id="newBestBanner" style="display:none;color:var(--yellow);margin:8px">🌟 NEW BEST! 🌟</div><div class="stats-grid"><div class="stat-cell"><div class="stat-num" id="rScore">0</div><div class="stat-lbl">SCORE</div></div><div class="stat-cell"><div class="stat-num" id="rBest">0</div><div class="stat-lbl">BEST</div></div><div class="stat-cell"><div class="stat-num" id="rCaught">0</div><div class="stat-lbl">CAUGHT</div></div><div class="stat-cell"><div class="stat-num" id="rWave">1</div><div class="stat-lbl">WAVE</div></div><div class="stat-cell"><div class="stat-num" id="rCombo">0</div><div class="stat-lbl">MAX COMBO</div></div><div class="stat-cell"><div class="stat-num" id="rMisses">0</div><div class="stat-lbl">MISSES</div></div></div><div class="over-btns"><button class="ob ob-retry" onclick="startGame()">↺ RETRY</button><button class="ob ob-menu" onclick="quitToMenu()">🏠 MENU</button></div></div></div>
 
 <script>
+// ---------- SOUND & MUSIC MANAGER (Web Audio, user-initiated) ----------
+class AudioManager {
+  constructor() { this.ctx = null; this.musicEnabled = false; this.musicNode = null; this.gain = null; this.musicInterval = null; this.sfxGain = null; }
+  async init() { if(this.ctx) return; this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.gain = this.ctx.createGain(); this.gain.gain.value = 0.3; this.gain.connect(this.ctx.destination); this.sfxGain = this.ctx.createGain(); this.sfxGain.gain.value = 0.4; this.sfxGain.connect(this.ctx.destination); await this.ctx.resume(); }
+  playCatch() { if(!this.ctx || !this.musicEnabled) return; try{ const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'sine'; osc.frequency.value = 880; gain.gain.value = 0.2; osc.connect(gain); gain.connect(this.sfxGain); osc.start(); gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.3); osc.stop(this.ctx.currentTime + 0.3); }catch(e){} }
+  playBomb() { if(!this.ctx || !this.musicEnabled) return; try{ const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'triangle'; osc.frequency.value = 220; gain.gain.value = 0.3; osc.connect(gain); gain.connect(this.sfxGain); osc.start(); gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.4); osc.stop(this.ctx.currentTime + 0.4); }catch(e){} }
+  playBossDefeat() { if(!this.ctx || !this.musicEnabled) return; try{ const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'square'; osc.frequency.value = 440; gain.gain.value = 0.25; osc.connect(gain); gain.connect(this.sfxGain); osc.start(); gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.8); osc.stop(this.ctx.currentTime + 0.8); }catch(e){} }
+  playLevelUp() { if(!this.ctx || !this.musicEnabled) return; try{ const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'sine'; osc.frequency.value = 660; gain.gain.value = 0.2; osc.connect(gain); gain.connect(this.sfxGain); osc.start(); gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.5); osc.stop(this.ctx.currentTime + 0.5); }catch(e){} }
+  startMusic() { if(!this.ctx || !this.musicEnabled) return; if(this.musicInterval) clearInterval(this.musicInterval); const playNote = (freq, duration) => { try{ const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'sine'; osc.frequency.value = freq; gain.gain.value = 0.08; osc.connect(gain); gain.connect(this.gain); osc.start(); gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration); osc.stop(this.ctx.currentTime + duration); }catch(e){} }; let step = 0; const melody = [261.63, 293.66, 329.63, 261.63, 392, 349.23, 329.63, 293.66]; this.musicInterval = setInterval(()=>{ if(!this.musicEnabled) return; playNote(melody[step % melody.length], 0.25); step++; }, 450); }
+  stopMusic() { if(this.musicInterval) { clearInterval(this.musicInterval); this.musicInterval = null; } }
+  async toggle() { if(!this.ctx) await this.init(); this.musicEnabled = !this.musicEnabled; if(this.musicEnabled) { await this.ctx.resume(); this.startMusic(); document.getElementById('musicToggleBtn').innerHTML = '🎵 MUSIC ON'; document.getElementById('musicToggleBtn').style.background = '#6c2bd9'; } else { this.stopMusic(); document.getElementById('musicToggleBtn').innerHTML = '🔴 MUSIC OFF'; document.getElementById('musicToggleBtn').style.background = '#2a1860'; } }
+}
+const audio = new AudioManager();
+document.getElementById('musicToggleBtn').addEventListener('click', () => audio.toggle());
+
 // ---------- GLOBALS ----------
 let gameMode='classic', difficulty='easy';
 let score=0, lives=5, wave=0, caught=0, misses=0, combo=0, maxCombo=0, power=0;
@@ -214,85 +192,42 @@ let bestScore=parseInt(localStorage.getItem('clown_best')||0);
 let totalCaught=parseInt(localStorage.getItem('clown_total')||0);
 let playerLevel=parseInt(localStorage.getItem('clown_level')||1);
 let playerXP=parseInt(localStorage.getItem('clown_xp')||0);
-
 const DIFF_CFG={ easy:{spawnMs:1500,maxScreen:6,lives:5,speedMult:0.7,bombChance:0.04,clownHp:1,ptsMult:0.8}, medium:{spawnMs:1100,maxScreen:8,lives:3,speedMult:1.0,bombChance:0.12,clownHp:2,ptsMult:1.0}, hard:{spawnMs:750,maxScreen:10,lives:2,speedMult:1.4,bombChance:0.18,clownHp:3,ptsMult:1.3}, insane:{spawnMs:450,maxScreen:14,lives:1,speedMult:2.0,bombChance:0.25,clownHp:4,ptsMult:2.0} };
 const CLOWN_TYPES=[{e:'🤡',pts:10,hp:1,speed:1.0,life:3000},{e:'🎪',pts:15,hp:1,speed:1.4,life:2500},{e:'🎠',pts:20,hp:2,speed:0.7,life:3500},{e:'🎯',pts:25,hp:1,speed:1.6,life:2200},{e:'👻',pts:8,hp:1,speed:2.0,life:1800},{e:'🎭',pts:30,hp:3,speed:0.9,life:4000},{e:'🃏',pts:35,hp:2,speed:1.3,life:2800}];
 const BOSSES=[{e:'🤡',name:'MEGA CLOWN',hp:20,pts:200},{e:'👹',name:'DEMON CLOWN',hp:30,pts:350},{e:'🎃',name:'SPOOKY CLOWN',hp:15,pts:150},{e:'🐉',name:'DRAGON CLOWN',hp:40,pts:500}];
 const POWERUP_TYPES=[{id:'freeze',e:'❄️',label:'FREEZE',dur:5000},{id:'double',e:'2️⃣',label:'2X PTS',dur:8000},{id:'shield',e:'🛡️',label:'SHIELD',dur:10000},{id:'magnet',e:'🧲',label:'MAGNET',dur:6000},{id:'slow',e:'🐢',label:'SLOW',dur:7000}];
 
-// achievements
-let ACHIEVEMENTS=[{id:'first_catch',name:'First Catch!',desc:'Catch a clown',icon:'🤡'},{id:'combo5',name:'Combo King',desc:'5x combo',icon:'🔥'},{id:'combo10',name:'Unstoppable',desc:'10x combo',icon:'⚡'},{id:'score500',name:'500 Club',desc:'500 points',icon:'⭐'},{id:'score2000',name:'High Roller',desc:'2000 points',icon:'🏅'},{id:'boss_kill',name:'Boss Slayer',desc:'Defeat a boss',icon:'👹'},{id:'wave5',name:'Wave Rider',desc:'Reach wave 5',icon:'🌊'},{id:'golden',name:'Golden Touch',desc:'Catch golden clown',icon:'🌟'},{id:'no_miss_wave',name:'Perfect Wave',desc:'Wave without misses',icon:'💎'},{id:'catch100',name:'Clown Magnet',desc:'100 clowns',icon:'🎪'}];
+// achievements (same as before)
+let ACHIEVEMENTS=[{id:'first_catch',name:'First Catch!',desc:'Catch a clown',icon:'🤡',unlocked:false},{id:'combo5',name:'Combo King',desc:'5x combo',icon:'🔥',unlocked:false},{id:'combo10',name:'Unstoppable',desc:'10x combo',icon:'⚡',unlocked:false},{id:'score500',name:'500 Club',desc:'500 points',icon:'⭐',unlocked:false},{id:'score2000',name:'High Roller',desc:'2000 points',icon:'🏅',unlocked:false},{id:'boss_kill',name:'Boss Slayer',desc:'Defeat a boss',icon:'👹',unlocked:false},{id:'wave5',name:'Wave Rider',desc:'Reach wave 5',icon:'🌊',unlocked:false},{id:'golden',name:'Golden Touch',desc:'Catch golden clown',icon:'🌟',unlocked:false},{id:'no_miss_wave',name:'Perfect Wave',desc:'Wave without misses',icon:'💎',unlocked:false},{id:'catch100',name:'Clown Magnet',desc:'100 clowns',icon:'🎪',unlocked:false}];
 let unlockedAchs=JSON.parse(localStorage.getItem('clown_achs')||'[]');
-ACHIEVEMENTS.forEach(a=>{ if(unlockedAchs.includes(a.id)) a.unlocked=true; else a.unlocked=false; });
-
+ACHIEVEMENTS.forEach(a=>{ if(unlockedAchs.includes(a.id)) a.unlocked=true; });
 function checkAch(id){ let a=ACHIEVEMENTS.find(x=>x.id===id); if(a&&!a.unlocked){ a.unlocked=true; unlockedAchs.push(id); localStorage.setItem('clown_achs',JSON.stringify(unlockedAchs)); showAchToast(a); } }
 function showAchToast(a){ document.getElementById('achName').innerHTML=`${a.icon} ${a.name}`; document.getElementById('achDesc').innerText=a.desc; let t=document.getElementById('achieveToast'); t.style.display='flex'; clearTimeout(t._tid); t._tid=setTimeout(()=>t.style.display='none',3000); }
 function showAchievements(){ let grid=document.getElementById('achGrid'); grid.innerHTML=''; ACHIEVEMENTS.forEach(a=>{ let d=document.createElement('div'); d.className=`ach-item ${a.unlocked?'unlocked':'locked'}`; d.innerHTML=`<div class="ach-item-icon">${a.unlocked?a.icon:'🔒'}</div><div class="ach-item-info"><div class="ach-item-name">${a.name}</div><div class="ach-item-desc">${a.desc}</div></div>`; grid.appendChild(d); }); let cnt=ACHIEVEMENTS.filter(x=>x.unlocked).length; document.getElementById('achProgress').innerText=`${cnt}/${ACHIEVEMENTS.length} unlocked`; document.getElementById('achOverlay').classList.add('show'); }
 function closeAchievements(){ document.getElementById('achOverlay').classList.remove('show'); }
 function savePersist(){ localStorage.setItem('clown_best',bestScore); localStorage.setItem('clown_total',totalCaught); localStorage.setItem('clown_level',playerLevel); localStorage.setItem('clown_xp',playerXP); }
 document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught;
-
-// helpers
-function updateHUD(){
-  document.getElementById('hScore').innerText=score;
-  document.getElementById('waveBadge').innerHTML=gameMode==='zen'?'🌈 ZEN MODE':gameMode==='boss'?`BOSS ${wave}`:`WAVE ${wave}`;
-  let lr=document.getElementById('livesRow'); lr.innerHTML=lives<=0?'💔':'❤️'.repeat(Math.min(lives,5))+(lives>5?`×${lives}`:'');
-  document.getElementById('powerBar').style.width=Math.min(100,power)+'%';
-  if(power>=100) document.getElementById('frenzyBtn').classList.add('ready'); else document.getElementById('frenzyBtn').classList.remove('ready');
-  let xpNeeded=playerLevel*100; let xpPercent=(playerXP%xpNeeded)/xpNeeded*100;
-  document.getElementById('xpBar').style.width=xpPercent+'%'; document.getElementById('lvlDisp').innerText=playerLevel;
-  if(wave>=5) checkAch('wave5');
-}
+function updateHUD(){ document.getElementById('hScore').innerText=score; document.getElementById('waveBadge').innerHTML=gameMode==='zen'?'🌈 ZEN':gameMode==='boss'?`BOSS ${wave}`:`WAVE ${wave}`; let lr=document.getElementById('livesRow'); lr.innerHTML=lives<=0?'💔':'❤️'.repeat(Math.min(lives,5))+(lives>5?`×${lives}`:''); document.getElementById('powerBar').style.width=Math.min(100,power)+'%'; if(power>=100) document.getElementById('frenzyBtn').classList.add('ready'); else document.getElementById('frenzyBtn').classList.remove('ready'); let xpNeeded=playerLevel*100; let xpPercent=(playerXP%xpNeeded)/xpNeeded*100; document.getElementById('xpBar').style.width=xpPercent+'%'; document.getElementById('lvlDisp').innerText=playerLevel; if(wave>=5) checkAch('wave5'); }
 function updateCombo(){ let cb=document.getElementById('comboBadge'); if(combo>=2){ cb.classList.add('show'); cb.innerText=`x${combo} COMBO!`; } else cb.classList.remove('show'); }
 function showToast(msg){ let t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',2000); }
 function popParticle(x,y,emoji,size){ let el=document.createElement('div'); el.className='particle'; el.style.cssText=`left:${x}px;top:${y}px;font-size:${size||28}px`; el.innerText=emoji; document.body.appendChild(el); setTimeout(()=>el.remove(),700); }
 function popScore(x,y,txt,col){ let el=document.createElement('div'); el.className='score-pop'; el.style.cssText=`left:${x}px;top:${y}px;color:${col||'#fff'}`; el.innerText=txt; document.body.appendChild(el); setTimeout(()=>el.remove(),900); }
-function shakeScreen(){ let a=document.getElementById('arena'); a.style.transform='translateX(8px)'; setTimeout(()=>a.style.transform='translateX(-8px)',50); setTimeout(()=>a.style.transform='',100); }
 function clearArena(){ document.getElementById('arena').innerHTML=''; if(spawnInt) clearInterval(spawnInt); if(waveTimer) clearTimeout(waveTimer); if(zenCountdown) clearInterval(zenCountdown); if(survivalDrainInt) clearInterval(survivalDrainInt); for(let id in puIntervals) clearInterval(puIntervals[id]); for(let id in puTimeouts) clearTimeout(puTimeouts[id]); activePowerups={}; document.getElementById('activePUs').innerHTML=''; }
 function removeActivePU(id){ if(activePowerups[id]){ delete activePowerups[id]; if(puIntervals[id]) clearInterval(puIntervals[id]); if(puTimeouts[id]) clearTimeout(puTimeouts[id]); let pill=document.getElementById(`pu_${id}`); if(pill) pill.remove(); } }
-function activatePU(pu){ if(activePowerups[pu.id]) return; activePowerups[pu.id]=true; showToast(`${pu.e} ${pu.label}!`); let puDiv=document.getElementById('activePUs'); let pill=document.createElement('div'); pill.className='pu-pill'; pill.id=`pu_${pu.id}`; let secs=Math.floor(pu.dur/1000); pill.innerHTML=`${pu.e} <span style="color:${pu.color||'#fff'}">${pu.label}</span> <span class="pu-timer" id="put_${pu.id}">${secs}s</span>`; puDiv.appendChild(pill); let interval=setInterval(()=>{ if(paused) return; secs--; let ts=document.getElementById(`put_${pu.id}`); if(ts) ts.innerText=`${secs}s`; if(secs<=0){ removeActivePU(pu.id); } },1000); puIntervals[pu.id]=interval; let tm=setTimeout(()=>removeActivePU(pu.id),pu.dur); puTimeouts[pu.id]=tm; }
-
-// ---------- GAME MECHANICS ----------
-function loseLife(){ lives--; updateHUD(); if(lives<=0) gameOver(); else shakeScreen(); }
-
-function addXP(amount){ playerXP+=amount; let needed=playerLevel*100; while(playerXP>=needed){ playerLevel++; playerXP-=needed; showToast(`🎉 LEVEL ${playerLevel}!`); needed=playerLevel*100; } savePersist(); updateHUD(); }
-
-function catchClown(el,info,x,y){ if(!el.parentNode) return; el.remove(); if(info.isBomb){ combo=0; updateCombo(); if(!activePowerups.shield){ loseLife(); showToast('💥 BOMB!'); } else { removeActivePU('shield'); showToast('🛡️ Shield saved!'); } popParticle(x,y,'💣',45); return; }
-  caught++; totalCaught++; checkAch('first_catch'); if(info.isGolden) checkAch('golden'); if(totalCaught>=100) checkAch('catch100');
-  let mult=activePowerups.double?2:1; let pts=Math.round(info.pts*(1+combo*0.15)*DIFF_CFG[difficulty].ptsMult*mult);
-  score+=pts; power=Math.min(100,power+8); combo++; if(combo>maxCombo) maxCombo=combo; if(combo>=5) checkAch('combo5'); if(combo>=10) checkAch('combo10'); if(score>=500) checkAch('score500'); if(score>=2000) checkAch('score2000');
-  addXP(Math.floor(pts/5+3)); updateHUD(); updateCombo(); popParticle(x,y,info.isGolden?'🌟':'✨',32); popScore(x,y,`+${pts}`,info.isGolden?'#ffd60a':'#fff'); if(info.isGolden) showToast(`⭐ GOLDEN! +${pts}`);
-  if(Math.random()<0.12+wave*0.008) spawnPowerup(x,y);
-  savePersist(); document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught;
-}
-
+function activatePU(pu){ if(activePowerups[pu.id]) return; activePowerups[pu.id]=true; showToast(`${pu.e} ${pu.label}!`); let puDiv=document.getElementById('activePUs'); let pill=document.createElement('div'); pill.className='pu-pill'; pill.id=`pu_${pu.id}`; let secs=Math.floor(pu.dur/1000); pill.innerHTML=`${pu.e} <span style="color:${pu.color||'#fff'}">${pu.label}</span> <span class="pu-timer" id="put_${pu.id}">${secs}s</span>`; puDiv.appendChild(pill); let interval=setInterval(()=>{ if(paused) return; secs--; let ts=document.getElementById(`put_${pu.id}`); if(ts) ts.innerText=`${secs}s`; if(secs<=0) removeActivePU(pu.id); },1000); puIntervals[pu.id]=interval; let tm=setTimeout(()=>removeActivePU(pu.id),pu.dur); puTimeouts[pu.id]=tm; }
+function loseLife(){ lives--; updateHUD(); audio.playBomb(); if(lives<=0) gameOver(); else shakeScreen(); }
+function addXP(amount){ playerXP+=amount; let needed=playerLevel*100; while(playerXP>=needed){ playerLevel++; playerXP-=needed; audio.playLevelUp(); showToast(`🎉 LEVEL ${playerLevel}!`); needed=playerLevel*100; } savePersist(); updateHUD(); }
+function catchClown(el,info,x,y){ if(!el.parentNode) return; el.remove(); if(info.isBomb){ combo=0; updateCombo(); if(!activePowerups.shield){ loseLife(); showToast('💥 BOMB!'); } else { removeActivePU('shield'); showToast('🛡️ Shield saved!'); } popParticle(x,y,'💣',45); return; } caught++; totalCaught++; checkAch('first_catch'); if(info.isGolden) checkAch('golden'); if(totalCaught>=100) checkAch('catch100'); let mult=activePowerups.double?2:1; let pts=Math.round(info.pts*(1+combo*0.15)*DIFF_CFG[difficulty].ptsMult*mult); score+=pts; power=Math.min(100,power+8); combo++; if(combo>maxCombo) maxCombo=combo; if(combo>=5) checkAch('combo5'); if(combo>=10) checkAch('combo10'); if(score>=500) checkAch('score500'); if(score>=2000) checkAch('score2000'); addXP(Math.floor(pts/5+3)); updateHUD(); updateCombo(); audio.playCatch(); popParticle(x,y,info.isGolden?'🌟':'✨',32); popScore(x,y,`+${pts}`,info.isGolden?'#ffd60a':'#fff'); if(info.isGolden) showToast(`⭐ GOLDEN! +${pts}`); if(Math.random()<0.12+wave*0.008) spawnPowerup(x,y); savePersist(); document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught; }
+function spawnClown(noBomb=false){ let cfg=DIFF_CFG[difficulty]; let arena=document.getElementById('arena'); let w=arena.offsetWidth,h=arena.offsetHeight; if(w<100) return; let isBomb=false,isGolden=false,type=null; let r=Math.random(); if(!noBomb && r<cfg.bombChance+wave*0.008) isBomb=true; else if(!noBomb && r<(cfg.bombChance+0.08)) isGolden=true; else type=CLOWN_TYPES[Math.floor(Math.random()*Math.min(CLOWN_TYPES.length,1+Math.floor(wave/2)))]; let maxHp=(isBomb?1:isGolden?1:(type?.hp||1))*cfg.clownHp; let hp=maxHp; let emoji=isBomb?'💣':isGolden?'⭐':(type?.e||'🤡'); let pts=isBomb?0:isGolden?60:(type?.pts||10); let lifeMs=activePowerups.slow?5500:(activePowerups.freeze?99999:Math.max(1000,(isGolden?2200:isBomb?2500:((type?.life||3000)-wave*50))/cfg.speedMult)); let el=document.createElement('div'); el.className=`clown ${isBomb?'bomb':''} ${isGolden?'golden':''}`; let x=30+Math.random()*(w-80); let y=70+Math.random()*(h-140); el.style.left=x+'px'; el.style.top=y+'px'; el.innerHTML=`<span class="c-emoji">${emoji}</span>${maxHp>1?`<div class="c-hp-wrap"><div class="c-hp" style="width:100%"></div></div>`:''}`; let startT=Date.now(); let shrinkId=setInterval(()=>{ if(paused||activePowerups.freeze) return; let ratio=Math.max(0,1-(Date.now()-startT)/lifeMs); el.style.opacity=0.4+ratio*0.6; if(ratio<=0){ clearInterval(shrinkId); if(el.parentNode){ el.remove(); if(!isBomb){ misses++; waveMisses++; combo=0; updateCombo(); if(!activePowerups.shield) loseLife(); else removeActivePU('shield'); popParticle(x,y,'❌',28); } } } },100); el._shrink=shrinkId; el.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running) return; if(activePowerups.magnet){ catchAllNearby(x,y,160); return; } hp--; if(hp<=0){ clearInterval(shrinkId); catchClown(el,{isBomb,isGolden,pts,emoji},x,y); } else { let bar=el.querySelector('.c-hp'); if(bar) bar.style.width=Math.round((hp/maxHp)*100)+'%'; el.style.transform='scale(0.75)'; setTimeout(()=>el.style.transform='',100); } }); arena.appendChild(el); }
 function catchAllNearby(cx,cy,rad){ document.querySelectorAll('.clown:not(.bomb)').forEach(el=>{ let l=parseFloat(el.style.left),t=parseFloat(el.style.top); if(Math.hypot(l-cx,t-cy)<rad){ clearInterval(el._shrink); let pts=15; score+=pts; caught++; popScore(l,t,`+${pts}`,'#ff6eb4'); popParticle(l,t,'🧲',28); el.remove(); updateHUD(); } }); }
-
-function spawnClown(noBomb=false){ let cfg=DIFF_CFG[difficulty]; let arena=document.getElementById('arena'); let w=arena.offsetWidth,h=arena.offsetHeight; if(w<100) return; let isBomb=false,isGolden=false,type=null; let r=Math.random(); if(!noBomb && r<cfg.bombChance+wave*0.008) isBomb=true; else if(!noBomb && r<(cfg.bombChance+0.08)) isGolden=true; else type=CLOWN_TYPES[Math.floor(Math.random()*Math.min(CLOWN_TYPES.length,1+Math.floor(wave/2)))];
-  let maxHp=(isBomb?1:isGolden?1:(type?.hp||1))*cfg.clownHp; let hp=maxHp; let emoji=isBomb?'💣':isGolden?'⭐':(type?.e||'🤡'); let pts=isBomb?0:isGolden?60:(type?.pts||10); let lifeMs=activePowerups.slow?5500:(activePowerups.freeze?99999:Math.max(1000,(isGolden?2200:isBomb?2500:((type?.life||3000)-wave*50))/cfg.speedMult));
-  let el=document.createElement('div'); el.className=`clown ${isBomb?'bomb':''} ${isGolden?'golden':''}`; let x=30+Math.random()*(w-80); let y=70+Math.random()*(h-140); el.style.left=x+'px'; el.style.top=y+'px'; el.innerHTML=`<span class="c-emoji">${emoji}</span>${maxHp>1?`<div class="c-hp-wrap"><div class="c-hp" style="width:100%"></div></div>`:''}`;
-  let startT=Date.now(); let shrinkId=setInterval(()=>{ if(paused||activePowerups.freeze) return; let ratio=Math.max(0,1-(Date.now()-startT)/lifeMs); el.style.opacity=0.4+ratio*0.6; if(ratio<=0){ clearInterval(shrinkId); if(el.parentNode){ el.remove(); if(!isBomb){ misses++; waveMisses++; combo=0; updateCombo(); if(!activePowerups.shield) loseLife(); else removeActivePU('shield'); popMiss(x,y,'Missed!'); } } } },100);
-  el._shrink=shrinkId;
-  el.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running) return; if(activePowerups.magnet){ catchAllNearby(x,y,160); return; } hp--; if(hp<=0){ clearInterval(shrinkId); catchClown(el,{isBomb,isGolden,pts,emoji},x,y); } else { let bar=el.querySelector('.c-hp'); if(bar) bar.style.width=Math.round((hp/maxHp)*100)+'%'; el.style.transform='scale(0.75)'; setTimeout(()=>el.style.transform='',100); } });
-  arena.appendChild(el);
-}
-function popMiss(x,y){ let d=document.createElement('div'); d.className='miss-pop'; d.style.cssText=`left:${x}px;top:${y}px`; d.innerText='❌'; document.body.appendChild(d); setTimeout(()=>d.remove(),700); }
 function spawnPowerup(x,y){ let pu=POWERUP_TYPES[Math.floor(Math.random()*POWERUP_TYPES.length)]; let el=document.createElement('div'); el.style.cssText=`position:absolute;left:${x}px;top:${y+15}px;z-index:35;cursor:pointer;font-size:34px;animation:bounceIn 0.2s;filter:drop-shadow(0 0 6px gold)`; el.innerText=pu.e; let alive=true; let tid=setTimeout(()=>{ alive=false; if(el.parentNode) el.remove(); },4500); el.addEventListener('click',(e)=>{ e.stopPropagation(); if(!alive||!running||paused) return; alive=false; clearTimeout(tid); el.remove(); activatePU(pu); }); document.getElementById('arena').appendChild(el); }
 function activateFrenzy(){ if(power<100||!running||paused) return; power=0; updateHUD(); document.getElementById('frenzyBtn').classList.remove('ready'); activatePU({id:'double',e:'2️⃣',label:'FRENZY 2X',dur:6000}); showToast('⚡ FRENZY!'); for(let i=0;i<5;i++) setTimeout(()=>spawnClown(gameMode==='zen'),i*180); }
-
-// Wave / Boss logic
 function nextWave(){ if(!running||bossActive) return; clearInterval(spawnInt); clearTimeout(waveTimer); wave++; updateHUD(); waveMisses=0; showToast(`🌊 WAVE ${wave}`); if(gameMode==='classic' && wave%5===0){ setTimeout(()=>startBoss(),1200); return; } let cfg=DIFF_CFG[difficulty]; let delay=Math.max(350,cfg.spawnMs-wave*25); let maxOn=cfg.maxScreen+Math.floor(wave/3); spawnInt=setInterval(()=>{ if(!paused&&running&&!bossActive&&document.querySelectorAll('.clown').length<maxOn) spawnClown(gameMode==='zen'); },delay); waveTimer=setTimeout(()=>{ if(waveMisses===0) checkAch('no_miss_wave'); nextWave(); },21000); }
-function startBoss(){ bossActive=true; clearInterval(spawnInt); let idx=Math.min(Math.floor(wave/5)-1,BOSSES.length-1); let b=BOSSES[idx]; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.5); showToast(`👹 ${b.name} APPEARS!`); let arena=document.getElementById('arena'); let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let pct=(bossHP/bossMaxHP)*100; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=pct+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',36); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=3; popScore(window.innerWidth/2,window.innerHeight/2,`BOSS +${pts}`,'#ffd60a'); showToast('🎉 BOSS DEFEATED!'); checkAch('boss_kill'); updateHUD(); setTimeout(()=>nextWave(),1500); } }); arena.appendChild(bossEl); }
-
-function startBossRush(){ wave++; updateHUD(); let b=BOSSES[(wave-1)%BOSSES.length]; bossActive=true; let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.2); bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=(bossHP/bossMaxHP)*100+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',30); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=2; showToast('⚔️ BOSS SLAIN!'); checkAch('boss_kill'); updateHUD(); if(wave>=BOSSES.length*2){ showToast('🏆 VICTORY!'); setTimeout(gameOver,1800); } else setTimeout(()=>startBossRush(),1500); } }); document.getElementById('arena').appendChild(bossEl); }
-
-function startZenWave(){ let secs=60; document.getElementById('zenTimer').style.display='block'; zenCountdown=setInterval(()=>{ if(paused) return; secs--; document.getElementById('zenTimer').innerText=secs; if(secs<=0){ clearInterval(zenCountdown); gameOver(); } },1000); let cfg=DIFF_CFG[difficulty]; spawnInt=setInterval(()=>{ if(paused&&running) return; if(document.querySelectorAll('.clown').length<10) spawnClown(true); },cfg.spawnMs); }
-
+function startBoss(){ bossActive=true; clearInterval(spawnInt); let idx=Math.min(Math.floor(wave/5)-1,BOSSES.length-1); let b=BOSSES[idx]; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.5); showToast(`👹 ${b.name} APPEARS!`); let arena=document.getElementById('arena'); let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let pct=(bossHP/bossMaxHP)*100; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=pct+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',36); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=3; audio.playBossDefeat(); popScore(window.innerWidth/2,window.innerHeight/2,`BOSS +${pts}`,'#ffd60a'); showToast('🎉 BOSS DEFEATED!'); checkAch('boss_kill'); updateHUD(); setTimeout(()=>nextWave(),1500); } }); arena.appendChild(bossEl); }
+function startBossRush(){ wave++; updateHUD(); let b=BOSSES[(wave-1)%BOSSES.length]; bossActive=true; let bossEl=document.createElement('div'); bossEl.className='boss-wrap'; bossEl.id='bossEl'; bossHP=bossMaxHP=b.hp+Math.floor(wave*1.2); bossEl.innerHTML=`<div class="boss-name">${b.name}</div><span class="boss-emoji">${b.e}</span><div class="boss-hp-wrap"><div class="boss-hp" id="bossHpBar" style="width:100%"></div></div>`; bossEl.addEventListener('click',(e)=>{ e.stopPropagation(); if(paused||!running||!bossActive) return; bossHP--; let bar=document.getElementById('bossHpBar'); if(bar) bar.style.width=(bossHP/bossMaxHP)*100+'%'; popParticle(window.innerWidth/2,window.innerHeight/2-70,'💥',30); if(bossHP<=0){ bossActive=false; bossEl.remove(); let pts=Math.round(b.pts*DIFF_CFG[difficulty].ptsMult); score+=pts; addXP(pts/2); caught+=2; audio.playBossDefeat(); showToast('⚔️ BOSS SLAIN!'); checkAch('boss_kill'); updateHUD(); if(wave>=BOSSES.length*2){ showToast('🏆 VICTORY!'); setTimeout(gameOver,1800); } else setTimeout(()=>startBossRush(),1500); } }); document.getElementById('arena').appendChild(bossEl); }
+function startZenWave(){ let secs=60; document.getElementById('zenTimer').style.display='block'; zenCountdown=setInterval(()=>{ if(paused) return; secs--; document.getElementById('zenTimer').innerText=secs; if(secs<=0){ clearInterval(zenCountdown); gameOver(); } },1000); let cfg=DIFF_CFG[difficulty]; spawnInt=setInterval(()=>{ if(paused||!running) return; if(document.querySelectorAll('.clown').length<10) spawnClown(true); },cfg.spawnMs); }
 function arenaClick(e){ if(e.target.id!=='arena') return; if(!running||paused||gameMode==='zen') return; combo=Math.max(0,combo-1); updateCombo(); }
-
-// Game Flow
 async function countdown321(){ return new Promise(res=>{ let el=document.getElementById('countdown'); el.classList.add('show'); let n=3; el.innerHTML=`<div class="cd-num">${n}</div>`; let t=setInterval(()=>{ n--; if(n<=0){ clearInterval(t); el.classList.remove('show'); res(); } else el.innerHTML=`<div class="cd-num">${n}</div>`; },800); setTimeout(()=>{ if(el.classList.contains('show')) el.innerHTML=`<div class="cd-num" style="color:#2dc653">GO!</div>`; },2400); }); }
-
 async function startGame(){ if(running) quitToMenu(); let modeBtn=document.querySelector('.mode-btn.sel-mode'); if(modeBtn) gameMode=modeBtn.dataset.mode; let diffBtn=document.querySelector('.diff-pill.sel'); if(diffBtn) difficulty=diffBtn.dataset.d; let cfg=DIFF_CFG[difficulty]; score=0; lives=cfg.lives; wave=0; caught=0; misses=0; combo=0; maxCombo=0; power=0; bossActive=false; waveMisses=0; activePowerups={}; for(let i in puIntervals) clearInterval(puIntervals[i]); for(let i in puTimeouts) clearTimeout(puTimeouts[i]); document.getElementById('activePUs').innerHTML=''; running=false; paused=false; clearArena(); document.getElementById('hud').classList.add('show'); document.getElementById('bottomHud').classList.add('show'); document.getElementById('arena').classList.add('show'); document.getElementById('pauseBtn').classList.add('show'); document.getElementById('zenTimer').style.display='none'; updateHUD(); await countdown321(); running=true; if(gameMode==='zen') startZenWave(); else if(gameMode==='boss') startBossRush(); else { if(gameMode==='survival'){ survivalDrainInt=setInterval(()=>{ if(running&&!paused&&!bossActive){ loseLife(); showToast('⏳ Survival drain...'); } },25000); } nextWave(); } }
 function togglePause(){ if(!running) return; paused=!paused; document.getElementById('pauseOverlay').classList.toggle('show',paused); document.getElementById('pauseBtn').innerText=paused?'▶':'⏸'; }
 function gameOver(){ running=false; paused=false; clearArena(); document.getElementById('hud').classList.remove('show'); document.getElementById('bottomHud').classList.remove('show'); document.getElementById('arena').classList.remove('show'); document.getElementById('pauseBtn').classList.remove('show'); document.getElementById('pauseOverlay').classList.remove('show'); document.getElementById('zenTimer').style.display='none'; let newBest=score>bestScore; if(newBest) bestScore=score; savePersist(); document.getElementById('rScore').innerText=score; document.getElementById('rBest').innerText=bestScore; document.getElementById('rCaught').innerText=caught; document.getElementById('rWave').innerText=wave; document.getElementById('rCombo').innerText=maxCombo; document.getElementById('rMisses').innerText=misses; document.getElementById('newBestBanner').style.display=newBest?'block':'none'; let medal='🥉',msg='Nice try!'; if(score>=2000){medal='🏆';msg='Clown Master!';}else if(score>=1000){medal='🥇';msg='Incredible!';}else if(score>=500){medal='🥈';msg='Great!';} document.getElementById('overMedal').innerText=medal; document.getElementById('overMsg').innerText=msg; document.getElementById('bestDisp').innerText=bestScore; document.getElementById('totalDisp').innerText=totalCaught; document.getElementById('overScreen').classList.add('active'); document.getElementById('menuScreen').classList.remove('active'); }
@@ -302,7 +237,6 @@ document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',fun
 document.querySelectorAll('.diff-pill').forEach(b=>b.addEventListener('click',function(){ document.querySelectorAll('.diff-pill').forEach(d=>d.classList.remove('sel')); this.classList.add('sel'); }));
 document.getElementById('arena').addEventListener('click',arenaClick);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&running) togglePause(); if(e.key==='f'&&power>=100&&running&&!paused) activateFrenzy(); });
-window.addEventListener('resize',()=>{ let arena=document.getElementById('arena'); if(arena&&running){} }); // keep responsive
 updateHUD();
 </script>
 </body>
